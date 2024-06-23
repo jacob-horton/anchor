@@ -1,3 +1,5 @@
+import 'package:anchor/pages/end_page.dart';
+import 'package:anchor/pages/favourite.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,39 +31,75 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final controller = PageController(initialPage: 0);
+  final verticalController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: SafeArea(
+        child: PageView(
+          controller: controller,
+          children: [
+            FavouritePage(
+              onClickForward: () => controller.nextPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            FavouritePage(
+              onClickBack: () => controller.previousPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              ),
+              onClickForward: () => controller.nextPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              ),
             ),
+            FavouritePage(
+              onClickBack: () => controller.previousPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              ),
+              onClickForward: () => controller.nextPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              ),
+            ),
+            PageView(
+              controller: verticalController,
+              // physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              children: [
+                EndPage(
+                  onClickBack: () => controller.previousPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  ),
+                  onClickForward: () => verticalController.nextPage(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    color: Colors.green,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    color: Colors.blue,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

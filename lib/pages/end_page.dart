@@ -1,5 +1,7 @@
 import 'package:anchor/pages/settings.dart';
+import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 
 class EndPage extends StatefulWidget {
   final void Function()? onClickBack;
@@ -18,89 +20,34 @@ class EndPage extends StatefulWidget {
 class _EndPageState extends State<EndPage> {
   @override
   Widget build(BuildContext context) {
-    final circleSize = MediaQuery.of(context).size.width / 2;
-    final buttonHitboxWidth = MediaQuery.of(context).size.width / 5;
-    final buttonHitboxHeight = MediaQuery.of(context).size.height / 3;
-    const buttonSize = 24.0;
-
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Text(
-                      "Jacob",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const SettingsPage()),
-                    ),
-                    child: const SizedBox(
-                      width: 80,
-                      height: 70,
-                      // color: Colors.red,
-                      child: Center(child: Icon(Icons.settings)),
-                    ),
-                  ),
-                ],
-              ),
+    return PageTemplate(
+      titleBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: Text(
+              "Jacob",
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: widget.onClickBack,
-                    behavior: HitTestBehavior.opaque,
-                    child: SizedBox(
-                      width: buttonHitboxWidth,
-                      height: buttonHitboxHeight,
-                      child: const Icon(Icons.arrow_left, size: buttonSize),
-                    ),
-                  ),
-                  SizedBox(
-                    width: circleSize,
-                    height: circleSize,
-                  ),
-                  SizedBox(width: buttonHitboxWidth),
-                ],
-              ),
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                onTap: widget.onClickForward,
-                behavior: HitTestBehavior.opaque,
-                child: SizedBox(
-                  width: buttonHitboxHeight,
-                  height: buttonHitboxHeight,
-                  child: const Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 40),
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        size: buttonSize,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+            child: const SizedBox(
+              width: 70,
+              height: 70,
+              child: Center(child: HeroIcon(HeroIcons.cog6Tooth)),
+            ),
+          ),
+        ],
       ),
+      onNavigateDown: widget.onClickForward,
+      onNavigateLeft: widget.onClickBack,
+      body: Container(),
     );
   }
 }

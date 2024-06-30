@@ -31,69 +31,114 @@ class _MyHomePageState extends State<MyHomePage> {
   final controller = PageController(initialPage: 0);
   final verticalController = PageController(initialPage: 0);
 
+  void Function()? onNavigateLeft;
+  void Function()? onNavigateRight;
+  void Function()? onNavigateUp;
+  void Function()? onNavigateDown;
+
+  @override
+  void initState() {
+    super.initState();
+    _handleHorizontalPageChange(0);
+  }
+
+  void _handleHorizontalPageChange(int page) {
+    setState(() {
+      onNavigateLeft = null;
+      onNavigateRight = null;
+      onNavigateUp = null;
+      onNavigateDown = null;
+
+      if (page < 3) {
+        if (page >= 1) {
+          onNavigateLeft = () => controller.previousPage(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              );
+        }
+
+        onNavigateRight = () => controller.nextPage(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+      }
+
+      if (page == 3) {
+        _handleVerticalPageChange(0);
+      }
+    });
+  }
+
+  void _handleVerticalPageChange(int page) {
+    setState(() {
+      onNavigateLeft = null;
+      onNavigateRight = null;
+      onNavigateUp = null;
+      onNavigateDown = null;
+
+      if (page == 0) {
+        onNavigateLeft = () => controller.previousPage(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+      } else {
+        onNavigateUp = () => verticalController.previousPage(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+      }
+
+      if (page < 2) {
+        onNavigateDown = () => verticalController.nextPage(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> horizontalPages = List.generate(3, (i) {
-      return FavouritePage(
-        onClickBack: i == 0
-            ? null
-            : () => controller.previousPage(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                ),
-        onClickForward: () => controller.nextPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-      );
-    });
+    List<Widget> horizontalPages = List.generate(
+      3,
+      (i) => const FavouritePage(),
+    );
 
     List<Widget> verticalPages = List.generate(
       2,
-      (_) => PageTemplate(
-        onNavigateUp: () => verticalController.previousPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-        onNavigateDown: () => verticalController.nextPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-        body: Center(
-          child: Container(
-            color: Colors.green,
-            width: 100,
-            height: 100,
-          ),
+      (_) => Center(
+        child: Container(
+          color: Colors.green,
+          width: 100,
+          height: 100,
         ),
       ),
     );
 
     verticalPages.insert(
       0,
-      EndPage(
-        onClickBack: () => controller.previousPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-        onClickForward: () => verticalController.nextPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        ),
-      ),
+      const EndPage(),
     );
 
     horizontalPages.add(
       PageView(
         controller: verticalController,
+        onPageChanged: _handleVerticalPageChange,
         scrollDirection: Axis.vertical,
         children: verticalPages,
       ),
     );
 
-    return PageView(
-      controller: controller,
-      children: horizontalPages,
+    return PageTemplate(
+      onNavigateLeft: onNavigateLeft,
+      onNavigateRight: onNavigateRight,
+      onNavigateUp: onNavigateUp,
+      onNavigateDown: onNavigateDown,
+      body: PageView(
+        controller: controller,
+        onPageChanged: _handleHorizontalPageChange,
+        children: horizontalPages,
+      ),
     );
   }
 }

@@ -85,7 +85,12 @@ class PageTemplate extends StatelessWidget {
             child: SizedBox(
               width: size.width,
               height: size.height,
-              child: HeroIcon(n.icon, size: 32.0),
+              child: HeroIcon(
+                n.icon,
+                size: 32.0,
+                style: HeroIconStyle.solid,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -97,18 +102,30 @@ class PageTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     var toolbarHeight = titleBar == null ? 0.0 : 75.0;
 
+    // TODO: custom titlebar
     return Scaffold(
-      appBar: AppBar(
-        title: titleBar,
-        toolbarHeight: toolbarHeight,
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ..._generateNavigators(context, toolbarHeight),
-            body,
-          ],
-        ),
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/background.jpg"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Stack(
+              children: [
+                body,
+                ..._generateNavigators(context, toolbarHeight),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -85,11 +85,30 @@ class PageTemplate extends StatelessWidget {
             child: SizedBox(
               width: size.width,
               height: size.height,
-              child: HeroIcon(
-                n.icon,
-                size: 32.0,
-                style: HeroIconStyle.solid,
-                color: Colors.white,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                  HeroIcon(
+                    n.icon,
+                    size: 32.0,
+                    style: HeroIconStyle.solid,
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ),
           ),
@@ -111,7 +130,7 @@ class PageTemplate extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/background.jpg"),
+                  image: AssetImage("images/nature.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),

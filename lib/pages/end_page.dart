@@ -1,6 +1,7 @@
 import 'package:anchor/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EndPage extends StatefulWidget {
   const EndPage({super.key});
@@ -10,6 +11,22 @@ class EndPage extends StatefulWidget {
 }
 
 class _EndPageState extends State<EndPage> {
+  String username = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  void _loadUsername() async {
+    // TODO: reload when popping to this state
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString("username") ?? 'User';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,14 +38,14 @@ class _EndPageState extends State<EndPage> {
             Padding(
               padding: const EdgeInsets.all(30),
               child: Text(
-                "Jacob",
+                username,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
+                MaterialPageRoute(builder: (context) => SettingsPage()),
               ),
               child: const SizedBox(
                 width: 70,

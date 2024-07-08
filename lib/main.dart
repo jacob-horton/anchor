@@ -1,5 +1,6 @@
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
+import 'package:anchor/pages/other_music.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final controller = PageController(initialPage: 0);
   final verticalController = PageController(initialPage: 0);
+
+  ScrollPhysics? horizontalScrollPhysics;
 
   void Function()? onNavigateLeft;
   void Function()? onNavigateRight;
@@ -81,11 +84,15 @@ class _MyHomePageState extends State<MyHomePage> {
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
             );
+
+        horizontalScrollPhysics = null;
       } else {
         onNavigateUp = () => verticalController.previousPage(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
             );
+
+        horizontalScrollPhysics = const NeverScrollableScrollPhysics();
       }
 
       if (page < 2) {
@@ -99,27 +106,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> horizontalPages = List.generate(
-      3,
-      (i) => const FavouritePage(),
-    );
+    List<Widget> horizontalPages =
+        List.generate(3, (i) => const FavouritePage());
 
-    List<Widget> verticalPages = List.generate(
-      2,
-      (_) => Center(
-        child: Container(
-          color: Colors.green,
-          width: 100,
-          height: 100,
-        ),
-      ),
-    );
+    List<Widget> verticalPages =
+        List.generate(2, (_) => const OtherMusicPage());
 
     verticalPages.insert(
       0,
       const EndPage(),
     );
 
+    // TODO: if vertical page >= 0.5, don't allow horizontal scroll
     horizontalPages.add(
       PageView(
         controller: verticalController,
@@ -137,6 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PageView(
         controller: controller,
         onPageChanged: _handleHorizontalPageChange,
+        physics: horizontalScrollPhysics,
         children: horizontalPages,
       ),
     );

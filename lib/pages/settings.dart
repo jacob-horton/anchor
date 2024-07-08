@@ -2,22 +2,25 @@ import 'package:anchor/widgets/button.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
+  late final SharedPreferences prefs;
   final void Function()? onClickBack;
   final void Function()? onClickForward;
 
-  const SettingsPage({
+  SettingsPage({
     super.key,
     this.onClickBack,
     this.onClickForward,
-  });
+  }) {
+    _loadPrefs();
+  }
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
+  void _loadPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
-class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     const spacing = 10.0;
@@ -59,7 +62,66 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: CustomButton(
                       text: "Choose background",
                       icon: HeroIcons.photo,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            const backgrounds = [
+                              'architecture.jpg',
+                              'beach-1.jpg',
+                              'beach-2.jpg',
+                              'beach-3.jpg',
+                              'forest-1.jpg',
+                              'forest-2.jpg',
+                              'lake.jpg',
+                              'nature.jpg',
+                            ];
+
+                            List<Widget> bgWidgets = backgrounds
+                                .map(
+                                  (b) => Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Image(
+                                      image: AssetImage('images/$b'),
+                                      width: 36,
+                                      height: 36,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                                .toList();
+
+                            return AlertDialog(
+                              title: const Text('Choose Background'),
+                              content: SizedBox(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                child: GridView.count(
+                                  crossAxisCount: 3,
+                                  children: bgWidgets,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                      foregroundColor: Colors.grey),
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text('Save'),
+                                  onPressed: () {
+                                    // TODO: save
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -69,7 +131,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       icon: HeroIcons.pencil,
                       onPressed: () {
                         TextEditingController controller =
-                            TextEditingController(text: "Jacob");
+                            TextEditingController(
+                          text: prefs.getString('username'),
+                        );
 
                         showDialog(
                           context: context,
@@ -94,7 +158,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                 TextButton(
                                   child: const Text('Save'),
                                   onPressed: () {
-                                    // TODO: save
+                                    // TODO: success toast?
+                                    prefs.setString(
+                                        "username", controller.text);
                                     Navigator.of(context).pop();
                                   },
                                 ),

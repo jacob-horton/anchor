@@ -1,6 +1,8 @@
+import 'package:anchor/models/background.dart';
 import 'package:anchor/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EndPage extends StatefulWidget {
@@ -44,9 +46,20 @@ class _EndPageState extends State<EndPage> {
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              ),
+              onTap: () {
+                print('tapped');
+                final value = context.read<BackgroundModel>();
+                print(value);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ChangeNotifierProvider<BackgroundModel>.value(
+                      value: value,
+                      child: SettingsPage(),
+                    ),
+                  ),
+                );
+              },
               child: const SizedBox(
                 width: 70,
                 height: 70,

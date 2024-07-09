@@ -1,8 +1,10 @@
+import 'package:anchor/models/background.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
 import 'package:anchor/pages/other_music.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -147,16 +149,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    return PageTemplate(
-      onNavigateLeft: onNavigateLeft,
-      onNavigateRight: onNavigateRight,
-      onNavigateUp: onNavigateUp,
-      onNavigateDown: onNavigateDown,
-      body: PageView(
-        controller: controller,
-        onPageChanged: _handleHorizontalPageChange,
-        physics: horizontalScrollPhysics,
-        children: horizontalPages,
+    return ChangeNotifierProvider(
+      create: (context) => BackgroundModel(),
+      child: PageTemplate(
+        onNavigateLeft: onNavigateLeft,
+        onNavigateRight: onNavigateRight,
+        onNavigateUp: onNavigateUp,
+        onNavigateDown: onNavigateDown,
+        body: PageView(
+          controller: controller,
+          onPageChanged: _handleHorizontalPageChange,
+          physics: horizontalScrollPhysics,
+          children: horizontalPages,
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
+import 'package:anchor/models/background.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class NavigatorDetails {
   final void Function()? onNavigate;
@@ -40,20 +41,9 @@ class PageTemplate extends StatefulWidget {
 }
 
 class _PageTemplateState extends State<PageTemplate> {
-  String backgroundPath = 'images/nature.jpg';
-
   @override
   void initState() {
     super.initState();
-    _loadUsername();
-  }
-
-  void _loadUsername() async {
-    // TODO: reload when background changed
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      backgroundPath = prefs.getString("background") ?? 'images/nature.jpg';
-    });
   }
 
   Iterable<Widget> _generateNavigators(
@@ -148,13 +138,17 @@ class _PageTemplateState extends State<PageTemplate> {
       body: Stack(
         children: [
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(backgroundPath),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            child: Consumer<BackgroundModel>(
+              builder: (context, backgroundModel, _) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(backgroundModel.path),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           SafeArea(

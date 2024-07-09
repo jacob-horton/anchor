@@ -1,7 +1,9 @@
+import 'package:anchor/models/background.dart';
 import 'package:anchor/widgets/button.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -35,6 +37,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const spacing = 10.0;
+    BackgroundModel provider = Provider.of<BackgroundModel>(context);
 
     return PageTemplate(
       titleBar: const Text("Settings"),
@@ -82,10 +85,7 @@ class SettingsPage extends StatelessWidget {
                                   (b) => GestureDetector(
                                     onTap: () {
                                       // TODO: set selected, only save to prefs when hitting "save"
-                                      prefs.setString(
-                                        'background',
-                                        'images/$b',
-                                      );
+                                      provider.updatePath(b);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(2.0),

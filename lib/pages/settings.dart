@@ -5,6 +5,17 @@ import 'package:heroicons/heroicons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
+  static const backgrounds = [
+    'architecture.jpg',
+    'beach-1.jpg',
+    'beach-2.jpg',
+    'beach-3.jpg',
+    'forest-1.jpg',
+    'forest-2.jpg',
+    'lake.jpg',
+    'nature.jpg',
+  ];
+
   late final SharedPreferences prefs;
   final void Function()? onClickBack;
   final void Function()? onClickForward;
@@ -66,17 +77,6 @@ class SettingsPage extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            const backgrounds = [
-                              'architecture.jpg',
-                              'beach-1.jpg',
-                              'beach-2.jpg',
-                              'beach-3.jpg',
-                              'forest-1.jpg',
-                              'forest-2.jpg',
-                              'lake.jpg',
-                              'nature.jpg',
-                            ];
-
                             List<Widget> bgWidgets = backgrounds
                                 .map(
                                   (b) => GestureDetector(

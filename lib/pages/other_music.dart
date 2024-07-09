@@ -1,9 +1,32 @@
 import 'package:anchor/widgets/music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:just_audio/just_audio.dart';
+
+class TrackDetail {
+  final String name;
+  final int level;
+
+  const TrackDetail({required this.name, required this.level});
+}
 
 class OtherMusicPage extends StatelessWidget {
-  const OtherMusicPage({super.key});
+  final TrackDetail trackDetail;
+
+  // TODO: provider that has:
+  // - private player
+  // - public currently playing track (as string)
+  // - public function to play/pause/set song
+  final player = AudioPlayer();
+
+  static const levelToColour = [Colors.red, Colors.yellow, Colors.green];
+
+  OtherMusicPage({
+    super.key,
+    required this.trackDetail,
+  }) {
+    player.setLoopMode(LoopMode.all);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,27 +36,23 @@ class OtherMusicPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // TODO: does need gesture?
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: SizedBox(
-            width: 64,
-            height: 64,
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: -1,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
+        SizedBox(
+          width: 64,
+          height: 64,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: levelToColour[trackDetail.level - 1],
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    spreadRadius: -1,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
             ),
           ),
@@ -41,8 +60,14 @@ class OtherMusicPage extends StatelessWidget {
         MusicPlayer(
           size: albumSize,
           isPlaying: false,
-          onChangeState: (isPlaying) {
+          onChangeState: (isPlaying) async {
             print(isPlaying);
+            if (isPlaying) {
+              await player.setAsset('music/${trackDetail.name}');
+              player.play();
+            } else {
+              await player.pause();
+            }
           },
         ),
         GestureDetector(

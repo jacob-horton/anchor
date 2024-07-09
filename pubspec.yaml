@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   heroicons: ^0.10.0
   shared_preferences: ^2.2.3
+  just_audio: ^0.9.38
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,22 @@ flutter:
     - images/forest-2.jpg
     - images/lake.jpg
     - images/nature.jpg
+
+    - music/breeze.mp3
+    - music/change.mp3
+    - music/difference.mp3
+    - music/drifting.mp3
+    - music/float.mp3
+    - music/halls.mp3
+    - music/homes.mp3
+    - music/motions.mp3
+    - music/openings.mp3
+    - music/signs.mp3
+    - music/sleepy.mp3
+    - music/summer.mp3
+    - music/trains.mp3
+    - music/walks.mp3
+    - music/warm.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

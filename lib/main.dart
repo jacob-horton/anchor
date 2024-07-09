@@ -29,6 +29,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const tracks = [
+    TrackDetail(name: 'breeze.mp3', level: 1),
+    TrackDetail(name: 'change.mp3', level: 1),
+    TrackDetail(name: 'difference.mp3', level: 1),
+    TrackDetail(name: 'drifting.mp3', level: 1),
+    TrackDetail(name: 'float.mp3', level: 1),
+    TrackDetail(name: 'halls.mp3', level: 1),
+    TrackDetail(name: 'homes.mp3', level: 1),
+    TrackDetail(name: 'motions.mp3', level: 1),
+    TrackDetail(name: 'openings.mp3', level: 1),
+    TrackDetail(name: 'signs.mp3', level: 1),
+    TrackDetail(name: 'sleepy.mp3', level: 1),
+    TrackDetail(name: 'summer.mp3', level: 1),
+    TrackDetail(name: 'trains.mp3', level: 1),
+    TrackDetail(name: 'walks.mp3', level: 1),
+    TrackDetail(name: 'warm.mp3', level: 1),
+  ];
+
   final controller = PageController(initialPage: 0);
   final verticalController = PageController(initialPage: 0);
 
@@ -109,15 +127,17 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> horizontalPages =
         List.generate(3, (i) => const FavouritePage());
 
-    List<Widget> verticalPages =
-        List.generate(2, (_) => const OtherMusicPage());
-
-    verticalPages.insert(
-      0,
+    List<Widget> verticalPages = [
       const EndPage(),
+    ];
+
+    verticalPages.insertAll(
+      1,
+      tracks.map(
+        (t) => OtherMusicPage(trackDetail: t),
+      ),
     );
 
-    // TODO: if vertical page >= 0.5, don't allow horizontal scroll
     horizontalPages.add(
       PageView(
         controller: verticalController,

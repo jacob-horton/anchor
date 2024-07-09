@@ -1,4 +1,5 @@
 import 'package:anchor/models/background.dart';
+import 'package:anchor/models/username.dart';
 import 'package:anchor/widgets/button.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const spacing = 10.0;
-    BackgroundModel provider = Provider.of<BackgroundModel>(context);
+    BackgroundModel background = Provider.of<BackgroundModel>(context);
+    UsernameModel username = Provider.of<UsernameModel>(context);
 
     return PageTemplate(
       titleBar: const Text("Settings"),
@@ -85,7 +87,7 @@ class SettingsPage extends StatelessWidget {
                                   (b) => GestureDetector(
                                     onTap: () {
                                       // TODO: set selected, only save to prefs when hitting "save"
-                                      provider.updatePath(b);
+                                      background.updateFilename(b);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(2.0),
@@ -140,9 +142,7 @@ class SettingsPage extends StatelessWidget {
                       icon: HeroIcons.pencil,
                       onPressed: () {
                         TextEditingController controller =
-                            TextEditingController(
-                          text: prefs.getString('username'),
-                        );
+                            TextEditingController(text: username.username);
 
                         showDialog(
                           context: context,
@@ -168,8 +168,7 @@ class SettingsPage extends StatelessWidget {
                                   child: const Text('Save'),
                                   onPressed: () {
                                     // TODO: success toast?
-                                    prefs.setString(
-                                        "username", controller.text);
+                                    username.username = controller.text;
                                     Navigator.of(context).pop();
                                   },
                                 ),

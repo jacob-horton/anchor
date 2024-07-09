@@ -1,4 +1,5 @@
 import 'package:anchor/models/background.dart';
+import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
 import 'package:anchor/pages/other_music.dart';
@@ -130,7 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
         List.generate(3, (i) => const FavouritePage());
 
     List<Widget> verticalPages = [
-      const EndPage(),
+      ChangeNotifierProvider(
+        create: (context) => UsernameModel(),
+        child: const EndPage(),
+      ),
     ];
 
     verticalPages.insertAll(

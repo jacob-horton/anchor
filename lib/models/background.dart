@@ -18,12 +18,10 @@ class BackgroundModel extends ChangeNotifier {
     }
   }
 
-  /// An unmodifiable view of the items in the cart.
   String get path => 'images/$_filename';
 
-  void updatePath(String filename) {
+  void updateFilename(String filename) {
     _filename = filename;
-    print(filename);
     _prefs.setString('background', filename);
     notifyListeners();
   }

@@ -1,9 +1,9 @@
 import 'package:anchor/models/background.dart';
+import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EndPage extends StatefulWidget {
   const EndPage({super.key});
@@ -13,20 +13,9 @@ class EndPage extends StatefulWidget {
 }
 
 class _EndPageState extends State<EndPage> {
-  String username = 'User';
-
   @override
   void initState() {
     super.initState();
-    _loadUsername();
-  }
-
-  void _loadUsername() async {
-    // TODO: reload when popping to this state
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString("username") ?? 'User';
-    });
   }
 
   @override
@@ -39,22 +28,30 @@ class _EndPageState extends State<EndPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(30),
-              child: Text(
-                username,
-                style: Theme.of(context).textTheme.titleLarge,
+              child: Consumer<UsernameModel>(
+                builder: (context, username, _) => Text(
+                  username.username,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
             ),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                print('tapped');
-                final value = context.read<BackgroundModel>();
-                print(value);
+                final background = context.read<BackgroundModel>();
+                final username = context.read<UsernameModel>();
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (context) => MultiProvider(
+                      providers: [
                         ChangeNotifierProvider<BackgroundModel>.value(
-                      value: value,
+                          value: background,
+                        ),
+                        ChangeNotifierProvider<UsernameModel>.value(
+                          value: username,
+                        ),
+                      ],
                       child: SettingsPage(),
                     ),
                   ),

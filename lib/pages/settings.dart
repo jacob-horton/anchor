@@ -79,13 +79,22 @@ class SettingsPage extends StatelessWidget {
 
                             List<Widget> bgWidgets = backgrounds
                                 .map(
-                                  (b) => Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Image(
-                                      image: AssetImage('images/$b'),
-                                      width: 36,
-                                      height: 36,
-                                      fit: BoxFit.cover,
+                                  (b) => GestureDetector(
+                                    onTap: () {
+                                      // TODO: set selected, only save to prefs when hitting "save"
+                                      prefs.setString(
+                                        'background',
+                                        'images/$b',
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Image(
+                                        image: AssetImage('images/$b'),
+                                        width: 36,
+                                        height: 36,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 )

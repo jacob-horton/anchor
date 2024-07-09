@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigatorDetails {
   final void Function()? onNavigate;
@@ -15,7 +16,7 @@ class NavigatorDetails {
   });
 }
 
-class PageTemplate extends StatelessWidget {
+class PageTemplate extends StatefulWidget {
   final Widget body;
   final Widget? titleBar;
 
@@ -34,6 +35,27 @@ class PageTemplate extends StatelessWidget {
     this.onNavigateDown,
   });
 
+  @override
+  State<PageTemplate> createState() => _PageTemplateState();
+}
+
+class _PageTemplateState extends State<PageTemplate> {
+  String backgroundPath = 'images/nature.jpg';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  void _loadUsername() async {
+    // TODO: reload when background changed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      backgroundPath = prefs.getString("background") ?? 'images/nature.jpg';
+    });
+  }
+
   Iterable<Widget> _generateNavigators(
       BuildContext context, double toolbarHeight) {
     const buttonThickness = 90.0;
@@ -44,25 +66,25 @@ class PageTemplate extends StatelessWidget {
 
     return [
       NavigatorDetails(
-        onNavigate: onNavigateLeft,
+        onNavigate: widget.onNavigateLeft,
         alignment: Alignment.centerLeft,
         icon: HeroIcons.arrowLeftCircle,
         direction: Axis.horizontal,
       ),
       NavigatorDetails(
-        onNavigate: onNavigateRight,
+        onNavigate: widget.onNavigateRight,
         alignment: Alignment.centerRight,
         icon: HeroIcons.arrowRightCircle,
         direction: Axis.horizontal,
       ),
       NavigatorDetails(
-        onNavigate: onNavigateUp,
+        onNavigate: widget.onNavigateUp,
         alignment: Alignment.topCenter,
         icon: HeroIcons.arrowUpCircle,
         direction: Axis.vertical,
       ),
       NavigatorDetails(
-        onNavigate: onNavigateDown,
+        onNavigate: widget.onNavigateDown,
         alignment: Alignment.bottomCenter,
         icon: HeroIcons.arrowDownCircle,
         direction: Axis.vertical,
@@ -119,18 +141,17 @@ class PageTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var toolbarHeight = titleBar == null ? 0.0 : 75.0;
+    var toolbarHeight = widget.titleBar == null ? 0.0 : 75.0;
 
-    // TODO: custom titlebar
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/nature.jpg"),
+                  image: AssetImage(backgroundPath),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -139,7 +160,7 @@ class PageTemplate extends StatelessWidget {
           SafeArea(
             child: Stack(
               children: [
-                body,
+                widget.body,
                 ..._generateNavigators(context, toolbarHeight),
               ],
             ),

@@ -137,19 +137,17 @@ class _PageTemplateState extends State<PageTemplate> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Expanded(
-            child: Consumer<BackgroundModel>(
-              builder: (context, backgroundModel, _) {
-                return Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(backgroundModel.path),
-                      fit: BoxFit.cover,
-                    ),
+          Consumer<BackgroundModel>(
+            builder: (context, backgroundModel, _) {
+              return Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(backgroundModel.path),
+                    fit: BoxFit.cover,
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
           SafeArea(
             child: Stack(

@@ -1,5 +1,6 @@
 import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/background.dart';
+import 'package:anchor/models/favourites.dart';
 import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
@@ -128,9 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> horizontalPages =
-        List.generate(3, (i) => const FavouritePage());
-
     List<Widget> verticalPages = [
       ChangeNotifierProvider(
         create: (context) => UsernameModel(),
@@ -145,13 +143,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    horizontalPages.add(
-      PageView(
-        controller: verticalController,
-        onPageChanged: _handleVerticalPageChange,
-        scrollDirection: Axis.vertical,
-        children: verticalPages,
-      ),
+    Widget endVerticalPage = PageView(
+      controller: verticalController,
+      onPageChanged: _handleVerticalPageChange,
+      scrollDirection: Axis.vertical,
+      children: verticalPages,
     );
 
     return ChangeNotifierProvider(
@@ -161,13 +157,27 @@ class _MyHomePageState extends State<MyHomePage> {
         onNavigateRight: onNavigateRight,
         onNavigateUp: onNavigateUp,
         onNavigateDown: onNavigateDown,
-        body: ChangeNotifierProvider(
-          create: (context) => AudioPlayerModel(),
-          child: PageView(
-            controller: controller,
-            onPageChanged: _handleHorizontalPageChange,
-            physics: horizontalScrollPhysics,
-            children: horizontalPages,
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => AudioPlayerModel()),
+            ChangeNotifierProvider(create: (context) => FavouritesModel()),
+          ],
+          child: Consumer<FavouritesModel>(
+            builder: (context, favourites, child) {
+              // TODO: handle when empty
+              Iterable<Widget> horizontalPages = favourites.favourites.map(
+                (f) => FavouritePage(trackName: f),
+              );
+
+              // TODO: have vertical pages in completely separate widget (have page view for [horizontal page view, vertical page view])
+              return PageView(
+                controller: controller,
+                onPageChanged: _handleHorizontalPageChange,
+                physics: horizontalScrollPhysics,
+                children: [...horizontalPages, child!],
+              );
+            },
+            child: endVerticalPage,
           ),
         ),
       ),

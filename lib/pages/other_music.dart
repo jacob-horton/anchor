@@ -1,4 +1,5 @@
 import 'package:anchor/models/audio_player.dart';
+import 'package:anchor/models/favourites.dart';
 import 'package:anchor/widgets/music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
@@ -60,12 +61,28 @@ class OtherMusicPage extends StatelessWidget {
             },
           ),
         ),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: const SizedBox(
-            width: 64,
-            height: 64,
-            child: HeroIcon(HeroIcons.star, size: 36, color: Colors.white),
+        Consumer<FavouritesModel>(
+          builder: (context, favourites, _) => GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              if (favourites.isFavourite(trackDetail.name)) {
+                favourites.removeFavourite(trackDetail.name);
+              } else {
+                favourites.addFavourite(trackDetail.name);
+              }
+            },
+            child: SizedBox(
+              width: 64,
+              height: 64,
+              child: HeroIcon(
+                HeroIcons.star,
+                size: 36,
+                color: Colors.white,
+                style: favourites.isFavourite(trackDetail.name)
+                    ? HeroIconStyle.solid
+                    : HeroIconStyle.outline,
+              ),
+            ),
           ),
         ),
       ],

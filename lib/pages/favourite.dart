@@ -2,7 +2,10 @@ import 'package:anchor/widgets/music_player.dart';
 import 'package:flutter/material.dart';
 
 class FavouritePage extends StatelessWidget {
-  const FavouritePage({super.key});
+  // TODO: change to track album art
+  final String trackName;
+
+  const FavouritePage({super.key, required this.trackName});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +13,7 @@ class FavouritePage extends StatelessWidget {
 
     return Center(
       child: MusicPlayer(
-        trackName: 'N/A',
+        trackName: trackName,
         size: albumSize,
         isPlaying: false,
         onChangeState: (isPlaying) {

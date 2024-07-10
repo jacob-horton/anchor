@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
         horizontalScrollPhysics = const NeverScrollableScrollPhysics();
       }
 
-      if (page < 2) {
+      if (page < tracks.length) {
         onNavigateDown = () => verticalController.nextPage(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,

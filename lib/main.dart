@@ -1,3 +1,4 @@
+import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/background.dart';
 import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
@@ -160,11 +161,14 @@ class _MyHomePageState extends State<MyHomePage> {
         onNavigateRight: onNavigateRight,
         onNavigateUp: onNavigateUp,
         onNavigateDown: onNavigateDown,
-        body: PageView(
-          controller: controller,
-          onPageChanged: _handleHorizontalPageChange,
-          physics: horizontalScrollPhysics,
-          children: horizontalPages,
+        body: ChangeNotifierProvider(
+          create: (context) => AudioPlayerModel(),
+          child: PageView(
+            controller: controller,
+            onPageChanged: _handleHorizontalPageChange,
+            physics: horizontalScrollPhysics,
+            children: horizontalPages,
+          ),
         ),
       ),
     );

@@ -19,6 +19,7 @@ class BackgroundModel extends ChangeNotifier {
   }
 
   String get path => 'images/$_filename';
+  String get filename => _filename;
 
   void updateFilename(String filename) {
     _filename = filename;

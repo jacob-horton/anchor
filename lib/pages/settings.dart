@@ -8,17 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
-  static const backgrounds = [
-    'architecture.jpg',
-    'beach-1.jpg',
-    'beach-2.jpg',
-    'beach-3.jpg',
-    'forest-1.jpg',
-    'forest-2.jpg',
-    'lake.jpg',
-    'nature.jpg',
-  ];
-
   late final SharedPreferences prefs;
   final void Function()? onClickBack;
   final void Function()? onClickForward;
@@ -82,53 +71,9 @@ class SettingsPage extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            List<Widget> bgWidgets = backgrounds
-                                .map(
-                                  (b) => GestureDetector(
-                                    onTap: () {
-                                      // TODO: set selected, only save to prefs when hitting "save"
-                                      background.updateFilename(b);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: Image(
-                                        image: AssetImage('images/$b'),
-                                        width: 36,
-                                        height: 36,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList();
-
-                            return AlertDialog(
-                              title: const Text('Choose Background'),
-                              content: SizedBox(
-                                height: 250,
-                                width: MediaQuery.of(context).size.width,
-                                child: GridView.count(
-                                  crossAxisCount: 3,
-                                  children: bgWidgets,
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                      foregroundColor: Colors.grey),
-                                  child: const Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  child: const Text('Save'),
-                                  onPressed: () {
-                                    // TODO: save
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
+                            return BackgroundButton(
+                              initialBackground: background.filename,
+                              onSave: (f) => background.updateFilename(f),
                             );
                           },
                         );
@@ -193,6 +138,107 @@ class SettingsPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BackgroundButton extends StatefulWidget {
+  final String initialBackground;
+  final void Function(String filename) onSave;
+
+  const BackgroundButton({
+    super.key,
+    required this.initialBackground,
+    required this.onSave,
+  });
+
+  @override
+  State<BackgroundButton> createState() => _BackgroundButtonState();
+}
+
+class _BackgroundButtonState extends State<BackgroundButton> {
+  static const backgrounds = [
+    'architecture.jpg',
+    'beach-1.jpg',
+    'beach-2.jpg',
+    'beach-3.jpg',
+    'forest-1.jpg',
+    'forest-2.jpg',
+    'lake.jpg',
+    'nature.jpg',
+  ];
+
+  late String selectedBackground;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedBackground = widget.initialBackground;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Choose Background'),
+      content: SizedBox(
+        height: 250,
+        width: MediaQuery.of(context).size.width,
+        child: GridView.count(
+          crossAxisCount: 3,
+          children: backgrounds
+              .map(
+                (b) => GestureDetector(
+                  onTap: () {
+                    setState(() => selectedBackground = b);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: Image(
+                            image: AssetImage('images/$b'),
+                            // width: 36,
+                            // height: 36,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (selectedBackground == b)
+                          Container(
+                            color: Colors.black38,
+                            child: const Center(
+                              child: HeroIcon(
+                                HeroIcons.check,
+                                color: Colors.white,
+                                style: HeroIconStyle.micro,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(foregroundColor: Colors.grey),
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('Save'),
+          onPressed: () {
+            widget.onSave(selectedBackground);
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 }

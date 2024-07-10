@@ -10,6 +10,7 @@ class FavouritePage extends StatelessWidget {
 
     return Center(
       child: MusicPlayer(
+        trackName: 'N/A',
         size: albumSize,
         isPlaying: false,
         onChangeState: (isPlaying) {

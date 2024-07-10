@@ -4,6 +4,9 @@ class MusicPlayer extends StatefulWidget {
   final double size;
   final bool isPlaying;
 
+  // TODO: replace with album art
+  final String trackName;
+
   final void Function(bool isPlaying) onChangeState;
 
   const MusicPlayer({
@@ -11,6 +14,7 @@ class MusicPlayer extends StatefulWidget {
     required this.size,
     required this.isPlaying,
     required this.onChangeState,
+    required this.trackName,
   });
 
   @override
@@ -47,6 +51,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
               ),
             ],
           ),
+          // TODO: move pause button to here instead of stack?
+          child: Center(child: Text(widget.trackName)),
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,

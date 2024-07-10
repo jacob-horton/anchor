@@ -53,6 +53,7 @@ class OtherMusicPage extends StatelessWidget {
         Consumer<AudioPlayerModel>(
           builder: (context, player, _) => MusicPlayer(
             size: albumSize,
+            trackName: trackDetail.name,
             isPlaying: player.currentTrack == trackDetail.name,
             onChangeState: (isPlaying) async {
               player.switchOrPause(trackDetail.name);

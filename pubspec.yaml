@@ -64,29 +64,25 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/architecture.jpg
-    - images/beach-1.jpg
-    - images/beach-2.jpg
-    - images/beach-3.jpg
-    - images/forest-1.jpg
-    - images/forest-2.jpg
-    - images/lake.jpg
-    - images/nature.jpg
+    - images/northern-lights.jpg
+    - images/sea.jpg
+    - images/stars.jpg
+    - images/sunset.jpg
 
-    - music/breeze.mp3
-    - music/change.mp3
-    - music/difference.mp3
-    - music/drifting.mp3
-    - music/float.mp3
-    - music/halls.mp3
-    - music/homes.mp3
-    - music/motions.mp3
-    - music/openings.mp3
+    - music/breeze.ogg
+    - music/change.ogg
+    - music/difference.ogg
+    - music/drifting.ogg
+    - music/float.ogg
+    - music/halls.ogg
+    - music/homes.ogg
+    - music/motions.ogg
+    - music/openings.ogg
     - music/signs.mp3
-    - music/sleepy.mp3
-    - music/summer.mp3
-    - music/trains.mp3
-    - music/walks.mp3
+    - music/sleepy.ogg
+    - music/summer.ogg
+    - music/trains.ogg
+    - music/walks.ogg
     - music/warm.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackgroundModel extends ChangeNotifier {
-  String _filename = 'nature.jpg';
+  String _filename = 'sunset.jpg';
   late final SharedPreferences _prefs;
 
   BackgroundModel() {

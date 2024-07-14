@@ -35,20 +35,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const tracks = [
-    TrackDetail(name: 'breeze.mp3', level: 1),
-    TrackDetail(name: 'change.mp3', level: 1),
-    TrackDetail(name: 'difference.mp3', level: 1),
-    TrackDetail(name: 'drifting.mp3', level: 1),
-    TrackDetail(name: 'float.mp3', level: 1),
-    TrackDetail(name: 'halls.mp3', level: 1),
-    TrackDetail(name: 'homes.mp3', level: 1),
-    TrackDetail(name: 'motions.mp3', level: 1),
-    TrackDetail(name: 'openings.mp3', level: 1),
+    TrackDetail(name: 'breeze.ogg', level: 1),
+    TrackDetail(name: 'change.ogg', level: 1),
+    TrackDetail(name: 'difference.ogg', level: 1),
+    TrackDetail(name: 'drifting.ogg', level: 1),
+    TrackDetail(name: 'float.ogg', level: 1),
+    TrackDetail(name: 'halls.ogg', level: 1),
+    TrackDetail(name: 'homes.ogg', level: 1),
+    TrackDetail(name: 'motions.ogg', level: 1),
+    TrackDetail(name: 'openings.ogg', level: 1),
     TrackDetail(name: 'signs.mp3', level: 1),
-    TrackDetail(name: 'sleepy.mp3', level: 1),
-    TrackDetail(name: 'summer.mp3', level: 1),
-    TrackDetail(name: 'trains.mp3', level: 1),
-    TrackDetail(name: 'walks.mp3', level: 1),
+    TrackDetail(name: 'sleepy.ogg', level: 1),
+    TrackDetail(name: 'summer.ogg', level: 1),
+    TrackDetail(name: 'trains.ogg', level: 1),
+    TrackDetail(name: 'walks.ogg', level: 1),
     TrackDetail(name: 'warm.mp3', level: 1),
   ];
 

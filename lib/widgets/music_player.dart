@@ -1,19 +1,16 @@
+import 'package:anchor/models/audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MusicPlayer extends StatefulWidget {
   final double size;
-  final bool isPlaying;
 
   // TODO: replace with album art
   final String trackName;
 
-  final void Function(bool isPlaying) onChangeState;
-
   const MusicPlayer({
     super.key,
     required this.size,
-    required this.isPlaying,
-    required this.onChangeState,
     required this.trackName,
   });
 
@@ -22,13 +19,8 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
-  late bool playing;
-
-  @override
-  void initState() {
-    super.initState();
-
-    playing = widget.isPlaying;
+  bool _isPlaying(AudioPlayerModel player) {
+    return player.currentTrack == widget.trackName && player.isPlaying;
   }
 
   @override
@@ -54,18 +46,19 @@ class _MusicPlayerState extends State<MusicPlayer> {
           // TODO: move pause button to here instead of stack?
           child: Center(child: Text(widget.trackName)),
         ),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() {
-            playing = !playing;
-            widget.onChangeState(playing);
-          }),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 35),
-            child: Icon(
-              playing ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
-              size: 48.0,
+        Consumer<AudioPlayerModel>(
+          builder: (context, player, _) => GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => setState(() {
+              player.switchOrPause(widget.trackName);
+            }),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 35),
+              child: Icon(
+                _isPlaying(player) ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+                size: 48.0,
+              ),
             ),
           ),
         ),

@@ -15,10 +15,6 @@ class FavouritePage extends StatelessWidget {
       child: MusicPlayer(
         trackName: trackName,
         size: albumSize,
-        isPlaying: false,
-        onChangeState: (isPlaying) {
-          print(isPlaying);
-        },
       ),
     );
   }

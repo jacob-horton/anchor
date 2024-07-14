@@ -124,14 +124,6 @@ class SettingsPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(spacing),
-                    child: CustomButton(
-                      text: "Cancel Subscription",
-                      icon: HeroIcons.xCircle,
-                      onPressed: () {},
-                    ),
-                  ),
                 ],
               ),
             ),

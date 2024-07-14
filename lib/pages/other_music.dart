@@ -1,4 +1,3 @@
-import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/favourites.dart';
 import 'package:anchor/widgets/music_player.dart';
 import 'package:flutter/material.dart';
@@ -51,16 +50,9 @@ class OtherMusicPage extends StatelessWidget {
             ),
           ),
         ),
-        Consumer<AudioPlayerModel>(
-          builder: (context, player, _) => MusicPlayer(
-            size: albumSize,
-            trackName: trackDetail.name,
-            isPlaying:
-                player.currentTrack == trackDetail.name && player.isPlaying,
-            onChangeState: (isPlaying) async {
-              player.switchOrPause(trackDetail.name);
-            },
-          ),
+        MusicPlayer(
+          size: albumSize,
+          trackName: trackDetail.name,
         ),
         Consumer<FavouritesModel>(
           builder: (context, favourites, _) => GestureDetector(

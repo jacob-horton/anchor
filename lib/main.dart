@@ -47,6 +47,10 @@ class AnchorApp extends StatelessWidget {
             fontWeight: FontWeight.w700,
             fontSize: 36.0,
           ),
+          titleSmall: GoogleFonts.poppins(
+            fontWeight: FontWeight.w700,
+            fontSize: 20.0,
+          ),
         ),
       ),
     );

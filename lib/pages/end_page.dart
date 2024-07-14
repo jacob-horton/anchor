@@ -31,7 +31,15 @@ class _EndPageState extends State<EndPage> {
               child: Consumer<UsernameModel>(
                 builder: (context, username, _) => Text(
                   username.username,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(0, 2),
+                        blurRadius: 25,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -57,10 +65,26 @@ class _EndPageState extends State<EndPage> {
                   ),
                 );
               },
-              child: const SizedBox(
+              child: Container(
                 width: 70,
                 height: 70,
-                child: Center(child: HeroIcon(HeroIcons.cog6Tooth)),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 15,
+                      spreadRadius: -20,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: HeroIcon(
+                    HeroIcons.cog6Tooth,
+                    style: HeroIconStyle.solid,
+                  ),
+                ),
               ),
             ),
           ],

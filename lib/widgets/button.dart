@@ -28,9 +28,15 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            HeroIcon(icon),
+            HeroIcon(icon, color: Colors.black),
             const SizedBox(width: 10),
-            Text(text, style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: Colors.black),
+            ),
           ],
         ),
       ),

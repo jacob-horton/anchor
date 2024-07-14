@@ -31,7 +31,6 @@ class SettingsPage extends StatelessWidget {
     UsernameModel username = Provider.of<UsernameModel>(context);
 
     return PageTemplate(
-      titleBar: const Text("Settings"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,15 +43,39 @@ class SettingsPage extends StatelessWidget {
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => Navigator.of(context).pop(),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: HeroIcon(HeroIcons.arrowLeftCircle),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 15,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: const HeroIcon(
+                          HeroIcons.arrowLeftCircle,
+                          style: HeroIconStyle.solid,
+                          size: 28.0,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10.0),
                   Text(
                     "Settings",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.2),
+                          offset: const Offset(0, 2),
+                          blurRadius: 25,
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -95,9 +118,13 @@ class SettingsPage extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Change Name'),
+                              title: Text(
+                                'Change Name',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
                               content: TextField(
                                 controller: controller,
+                                style: Theme.of(context).textTheme.bodySmall,
                                 decoration: const InputDecoration(
                                   hintText: "Your name",
                                 ),
@@ -169,7 +196,10 @@ class _BackgroundButtonState extends State<BackgroundButton> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Choose Background'),
+      title: Text(
+        'Choose Background',
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
       content: SizedBox(
         height: 250,
         width: MediaQuery.of(context).size.width,

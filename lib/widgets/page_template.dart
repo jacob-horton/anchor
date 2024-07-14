@@ -19,7 +19,6 @@ class NavigatorDetails {
 
 class PageTemplate extends StatefulWidget {
   final Widget body;
-  final Widget? titleBar;
 
   final void Function()? onNavigateLeft;
   final void Function()? onNavigateRight;
@@ -29,7 +28,6 @@ class PageTemplate extends StatefulWidget {
   const PageTemplate({
     super.key,
     required this.body,
-    this.titleBar,
     this.onNavigateLeft,
     this.onNavigateRight,
     this.onNavigateUp,
@@ -46,8 +44,7 @@ class _PageTemplateState extends State<PageTemplate> {
     super.initState();
   }
 
-  Iterable<Widget> _generateNavigators(
-      BuildContext context, double toolbarHeight) {
+  Iterable<Widget> _generateNavigators(BuildContext context) {
     const buttonThickness = 90.0;
     Size horizontalSize =
         Size(buttonThickness, MediaQuery.of(context).size.height / 3);
@@ -82,46 +79,38 @@ class _PageTemplateState extends State<PageTemplate> {
     ].where((n) => n.onNavigate != null).map((n) {
       var size = n.direction == Axis.horizontal ? horizontalSize : verticalSize;
 
-      // Pad horizontal buttons so they're still in the middle even with titlebar
-      var padding = n.direction == Axis.horizontal
-          ? EdgeInsets.only(bottom: toolbarHeight)
-          : EdgeInsets.zero;
-
       return Align(
         alignment: n.alignment,
-        child: Padding(
-          padding: padding,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: n.onNavigate,
-            child: SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 5,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: n.onNavigate,
+          child: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
                   ),
-                  HeroIcon(
-                    n.icon,
-                    size: 32.0,
-                    style: HeroIconStyle.solid,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
+                ),
+                HeroIcon(
+                  n.icon,
+                  size: 32.0,
+                  style: HeroIconStyle.solid,
+                  color: Colors.white,
+                ),
+              ],
             ),
           ),
         ),
@@ -131,8 +120,6 @@ class _PageTemplateState extends State<PageTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    var toolbarHeight = widget.titleBar == null ? 0.0 : 75.0;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -153,7 +140,7 @@ class _PageTemplateState extends State<PageTemplate> {
             child: Stack(
               children: [
                 widget.body,
-                ..._generateNavigators(context, toolbarHeight),
+                ..._generateNavigators(context),
               ],
             ),
           ),

@@ -2,16 +2,24 @@ import 'package:anchor/models/audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class TrackDetail {
+  final String name;
+  final int level;
+
+  const TrackDetail({
+    required this.name,
+    required this.level,
+  });
+}
+
 class MusicPlayer extends StatefulWidget {
   final double size;
-
-  // TODO: replace with album art
-  final String trackName;
+  final TrackDetail trackDetail;
 
   const MusicPlayer({
     super.key,
     required this.size,
-    required this.trackName,
+    required this.trackDetail,
   });
 
   @override
@@ -19,8 +27,23 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
+  static final levelColours = [
+    [
+      Colors.lightGreen,
+      Colors.green,
+    ],
+    [
+      Colors.cyan[200],
+      Colors.blue,
+    ],
+    [
+      const Color(0xfffce1f3),
+      const Color(0xffffb0d4),
+    ],
+  ];
+
   bool _isPlaying(AudioPlayerModel player) {
-    return player.currentTrack == widget.trackName && player.isPlaying;
+    return player.currentTrack == widget.trackDetail.name && player.isPlaying;
   }
 
   @override
@@ -32,7 +55,13 @@ class _MusicPlayerState extends State<MusicPlayer> {
           width: widget.size,
           height: widget.size,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: levelColours[widget.trackDetail.level - 1]
+                  .map((c) => c!)
+                  .toList(),
+            ),
             borderRadius: BorderRadius.circular(widget.size / 5),
             boxShadow: [
               BoxShadow(
@@ -44,13 +73,13 @@ class _MusicPlayerState extends State<MusicPlayer> {
             ],
           ),
           // TODO: move pause button to here instead of stack?
-          child: Center(child: Text(widget.trackName)),
+          child: Center(child: Text(widget.trackDetail.name.split('.')[0])),
         ),
         Consumer<AudioPlayerModel>(
           builder: (context, player, _) => GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => setState(() {
-              player.switchOrPause(widget.trackName);
+              player.switchOrPause(widget.trackDetail.name);
             }),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 35),

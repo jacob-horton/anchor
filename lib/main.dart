@@ -6,6 +6,7 @@ import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
 import 'package:anchor/pages/other_music.dart';
 import 'package:anchor/widgets/keep_alive.dart';
+import 'package:anchor/widgets/music_player.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,23 +42,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const _tracks = [
-    TrackDetail(name: 'breeze.ogg', level: 1),
-    TrackDetail(name: 'change.ogg', level: 1),
-    TrackDetail(name: 'difference.ogg', level: 1),
-    TrackDetail(name: 'drifting.ogg', level: 1),
-    TrackDetail(name: 'float.ogg', level: 1),
-    TrackDetail(name: 'halls.ogg', level: 1),
-    TrackDetail(name: 'homes.ogg', level: 1),
-    TrackDetail(name: 'motions.ogg', level: 1),
-    TrackDetail(name: 'openings.ogg', level: 1),
-    TrackDetail(name: 'signs.mp3', level: 1),
-    TrackDetail(name: 'sleepy.ogg', level: 1),
-    TrackDetail(name: 'summer.ogg', level: 1),
-    TrackDetail(name: 'trains.ogg', level: 1),
-    TrackDetail(name: 'walks.ogg', level: 1),
-    TrackDetail(name: 'warm.mp3', level: 1),
-  ];
+  static const _tracks = {
+    // Level 1
+    'homes.ogg': TrackDetail(name: 'homes.ogg', level: 1),
+    'openings.ogg': TrackDetail(name: 'openings.ogg', level: 1),
+    'breeze.ogg': TrackDetail(name: 'breeze.ogg', level: 1),
+    'signs.mp3': TrackDetail(name: 'signs.mp3', level: 1),
+    'warm.mp3': TrackDetail(name: 'warm.mp3', level: 1),
+
+    // Level 2
+    'trains.ogg': TrackDetail(name: 'trains.ogg', level: 2),
+    'float.ogg': TrackDetail(name: 'float.ogg', level: 2),
+    'change.ogg': TrackDetail(name: 'change.ogg', level: 2),
+    'walks.ogg': TrackDetail(name: 'walks.ogg', level: 2),
+    'sleepy.ogg': TrackDetail(name: 'sleepy.ogg', level: 2),
+
+    // Level 3
+    'halls.ogg': TrackDetail(name: 'halls.ogg', level: 3),
+    'summer.ogg': TrackDetail(name: 'summer.ogg', level: 3),
+    'motions.ogg': TrackDetail(name: 'motions.ogg', level: 3),
+    'drifting.ogg': TrackDetail(name: 'drifting.ogg', level: 3),
+    'difference.ogg': TrackDetail(name: 'difference.ogg', level: 3),
+  };
 
   final _horizontalController = PageController();
   final _verticalController = PageController();
@@ -105,7 +111,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Iterable<Widget> verticalPages = _tracks.map(
+    Iterable<Widget> verticalPages = _tracks.values.map(
       (t) => OtherMusicPage(
         trackDetail: t,
 
@@ -169,7 +175,9 @@ class _HomePageState extends State<HomePage> {
                         );
                       }
 
-                      return FavouritePage(trackName: favourites.favourites[i]);
+                      return FavouritePage(
+                        trackDetail: _tracks[favourites.favourites[i]]!,
+                      );
                     },
                     itemCount: favourites.favourites.length + 1,
                   ),

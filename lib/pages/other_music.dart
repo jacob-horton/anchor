@@ -4,16 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
 
-class TrackDetail {
-  final String name;
-  final int level;
-
-  const TrackDetail({
-    required this.name,
-    required this.level,
-  });
-}
-
 class OtherMusicPage extends StatelessWidget {
   final TrackDetail trackDetail;
   final void Function(int numFavourites) onFavouriteChanged;
@@ -57,7 +47,7 @@ class OtherMusicPage extends StatelessWidget {
         ),
         MusicPlayer(
           size: albumSize,
-          trackName: trackDetail.name,
+          trackDetail: trackDetail,
         ),
         Consumer<FavouritesModel>(
           builder: (context, favourites, _) => GestureDetector(

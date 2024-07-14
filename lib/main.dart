@@ -5,8 +5,10 @@ import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite.dart';
 import 'package:anchor/pages/other_music.dart';
+import 'package:anchor/widgets/keep_alive.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,6 +20,11 @@ class AnchorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return const MaterialApp(
       title: 'Anchor',
       home: HomePage(title: 'Flutter Demo Home Page'),
@@ -34,7 +41,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const tracks = [
+  static const _tracks = [
     TrackDetail(name: 'breeze.ogg', level: 1),
     TrackDetail(name: 'change.ogg', level: 1),
     TrackDetail(name: 'difference.ogg', level: 1),
@@ -52,132 +59,124 @@ class _HomePageState extends State<HomePage> {
     TrackDetail(name: 'warm.mp3', level: 1),
   ];
 
-  final controller = PageController(initialPage: 0);
-  final verticalController = PageController(initialPage: 0);
+  final _horizontalController = PageController();
+  final _verticalController = PageController();
 
-  ScrollPhysics? horizontalScrollPhysics;
+  final _favouritesModel = FavouritesModel();
+  final _audioPlayerModel = AudioPlayerModel();
 
-  void Function()? onNavigateLeft;
-  void Function()? onNavigateRight;
-  void Function()? onNavigateUp;
-  void Function()? onNavigateDown;
+  ScrollPhysics? _verticalScrollPhysics = const NeverScrollableScrollPhysics();
 
-  @override
-  void initState() {
-    super.initState();
-    _handleHorizontalPageChange(0);
-  }
+  bool _navLeft = false;
+  bool _navRight = true;
+  bool _navUp = false;
+  bool _navDown = false;
 
-  void _handleHorizontalPageChange(int page) {
+  void _onPageChange() {
+    // Set navigation buttons
+    bool newNavLeft = false;
+    bool newNavRight = false;
+    bool newNavUp = false;
+    bool newNavDown = false;
+
+    final horizPage = (_horizontalController.page ?? 0.0).round();
+    final vertPage = (_verticalController.page ?? 0.0).round();
+    if (vertPage != 0) {
+      // We are scrolling vertically
+      newNavUp = true;
+      newNavDown = vertPage < _tracks.length;
+    } else if (horizPage < _favouritesModel.favourites.length) {
+      // We are scrolling horizontally
+      newNavLeft = horizPage > 0;
+      newNavRight = true;
+    } else {
+      // We are at end page
+      newNavLeft = true;
+      newNavDown = true;
+    }
+
     setState(() {
-      onNavigateLeft = null;
-      onNavigateRight = null;
-      onNavigateUp = null;
-      onNavigateDown = null;
-
-      if (page < 3) {
-        if (page >= 1) {
-          onNavigateLeft = () => controller.previousPage(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-              );
-        }
-
-        onNavigateRight = () => controller.nextPage(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
-      }
-
-      if (page == 3) {
-        _handleVerticalPageChange(0);
-      }
-    });
-  }
-
-  void _handleVerticalPageChange(int page) {
-    setState(() {
-      onNavigateLeft = null;
-      onNavigateRight = null;
-      onNavigateUp = null;
-      onNavigateDown = null;
-
-      if (page == 0) {
-        onNavigateLeft = () => controller.previousPage(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
-
-        horizontalScrollPhysics = null;
-      } else {
-        onNavigateUp = () => verticalController.previousPage(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
-
-        horizontalScrollPhysics = const NeverScrollableScrollPhysics();
-      }
-
-      if (page < tracks.length) {
-        onNavigateDown = () => verticalController.nextPage(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
-      }
+      _navLeft = newNavLeft;
+      _navRight = newNavRight;
+      _navUp = newNavUp;
+      _navDown = newNavDown;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> verticalPages = [
-      ChangeNotifierProvider(
-        create: (context) => UsernameModel(),
-        child: const EndPage(),
-      ),
-    ];
+    Iterable<Widget> verticalPages = _tracks.map(
+      (t) => OtherMusicPage(
+        trackDetail: t,
 
-    verticalPages.insertAll(
-      1,
-      tracks.map(
-        (t) => OtherMusicPage(trackDetail: t),
+        // Make sure we scroll to the last page if we add/remove a favourite
+        onFavouriteChanged: (numFavourites) =>
+            _horizontalController.jumpToPage(numFavourites),
       ),
-    );
-
-    Widget endVerticalPage = PageView(
-      controller: verticalController,
-      onPageChanged: _handleVerticalPageChange,
-      scrollDirection: Axis.vertical,
-      children: verticalPages,
     );
 
     return ChangeNotifierProvider(
       create: (context) => BackgroundModel(),
       child: PageTemplate(
-        onNavigateLeft: onNavigateLeft,
-        onNavigateRight: onNavigateRight,
-        onNavigateUp: onNavigateUp,
-        onNavigateDown: onNavigateDown,
+        onNavigateLeft: _navLeft
+            ? () => _horizontalController.previousPage(
+                duration: Durations.short2, curve: Curves.easeInOut)
+            : null,
+        onNavigateRight: _navRight
+            ? () => _horizontalController.nextPage(
+                duration: Durations.short2, curve: Curves.easeInOut)
+            : null,
+        onNavigateUp: _navUp
+            ? () => _verticalController.previousPage(
+                duration: Durations.short2, curve: Curves.easeInOut)
+            : null,
+        onNavigateDown: _navDown
+            ? () => _verticalController.nextPage(
+                duration: Durations.short2, curve: Curves.easeInOut)
+            : null,
         body: MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (context) => AudioPlayerModel()),
-            ChangeNotifierProvider(create: (context) => FavouritesModel()),
+            ChangeNotifierProvider(create: (context) => _audioPlayerModel),
+            ChangeNotifierProvider(create: (context) => _favouritesModel),
           ],
-          child: Consumer<FavouritesModel>(
-            builder: (context, favourites, child) {
-              // TODO: handle when empty
-              Iterable<Widget> horizontalPages = favourites.favourites.map(
-                (f) => FavouritePage(trackName: f),
-              );
+          child: PageView(
+            scrollDirection: Axis.vertical,
+            physics: _verticalScrollPhysics,
+            controller: _verticalController,
+            onPageChanged: (_) => _onPageChange(),
+            children: [
+              Consumer<FavouritesModel>(
+                builder: (context, favourites, _) => KeepAlivePage(
+                  child: PageView.builder(
+                    onPageChanged: (i) {
+                      // Only allow scrolling vertically when at end of horizontal
+                      if (i == favourites.favourites.length) {
+                        setState(() => _verticalScrollPhysics = null);
+                      } else {
+                        setState(() => _verticalScrollPhysics =
+                            const NeverScrollableScrollPhysics());
+                      }
 
-              // TODO: have vertical pages in completely separate widget (have page view for [horizontal page view, vertical page view])
-              return PageView(
-                controller: controller,
-                onPageChanged: _handleHorizontalPageChange,
-                physics: horizontalScrollPhysics,
-                children: [...horizontalPages, child!],
-              );
-            },
-            child: endVerticalPage,
+                      // Update arrows
+                      _onPageChange();
+                    },
+                    controller: _horizontalController,
+                    itemBuilder: (context, i) {
+                      if (i == favourites.favourites.length) {
+                        return ChangeNotifierProvider(
+                          create: (context) => UsernameModel(),
+                          child: const EndPage(),
+                        );
+                      }
+
+                      return FavouritePage(trackName: favourites.favourites[i]);
+                    },
+                    itemCount: favourites.favourites.length + 1,
+                  ),
+                ),
+              ),
+              ...verticalPages
+            ],
           ),
         ),
       ),

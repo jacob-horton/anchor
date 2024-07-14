@@ -172,7 +172,7 @@ class _BackgroundButtonState extends State<BackgroundButton> {
         height: 250,
         width: MediaQuery.of(context).size.width,
         child: GridView.count(
-          crossAxisCount: 3,
+          crossAxisCount: 2,
           children: backgrounds
               .map(
                 (b) => GestureDetector(

@@ -8,17 +8,22 @@ class TrackDetail {
   final String name;
   final int level;
 
-  const TrackDetail({required this.name, required this.level});
+  const TrackDetail({
+    required this.name,
+    required this.level,
+  });
 }
 
 class OtherMusicPage extends StatelessWidget {
   final TrackDetail trackDetail;
+  final void Function(int numFavourites) onFavouriteChanged;
 
   static const levelToColour = [Colors.red, Colors.yellow, Colors.green];
 
   const OtherMusicPage({
     super.key,
     required this.trackDetail,
+    required this.onFavouriteChanged,
   });
 
   @override
@@ -63,6 +68,8 @@ class OtherMusicPage extends StatelessWidget {
               } else {
                 favourites.addFavourite(trackDetail.name);
               }
+
+              onFavouriteChanged(favourites.favourites.length);
             },
             child: SizedBox(
               width: 64,

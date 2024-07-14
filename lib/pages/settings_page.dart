@@ -50,8 +50,10 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10.0),
-                  Text("Settings",
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    "Settings",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ],
               ),
             ),

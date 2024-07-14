@@ -1,5 +1,7 @@
 import 'package:anchor/models/audio_player.dart';
+import 'package:anchor/models/favourites.dart';
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
 
 class TrackDetail {
@@ -15,11 +17,13 @@ class TrackDetail {
 class MusicPlayer extends StatefulWidget {
   final double size;
   final TrackDetail trackDetail;
+  final void Function(int numFavourites)? onFavouriteChanged;
 
   const MusicPlayer({
     super.key,
     required this.size,
     required this.trackDetail,
+    this.onFavouriteChanged,
   });
 
   @override
@@ -48,50 +52,84 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: widget.size,
-          height: widget.size,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: levelColours[widget.trackDetail.level - 1]
-                  .map((c) => c!)
-                  .toList(),
+    return Container(
+      width: widget.size,
+      height: widget.size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: levelColours[widget.trackDetail.level - 1]
+              .map((c) => c!)
+              .toList(),
+        ),
+        borderRadius: BorderRadius.circular(widget.size / 5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 25,
+            spreadRadius: 5,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      // TODO: move pause button to here instead of stack?
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              widget.trackDetail.name.split('.')[0],
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            borderRadius: BorderRadius.circular(widget.size / 5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 25,
-                spreadRadius: 5,
-                offset: const Offset(0, 5),
+          ),
+          const SizedBox(height: 20.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Consumer<AudioPlayerModel>(
+                builder: (context, player, _) => GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => setState(() {
+                    player.switchOrPause(widget.trackDetail.name);
+                  }),
+                  child: HeroIcon(
+                    _isPlaying(player) ? HeroIcons.pause : HeroIcons.play,
+                    color: Colors.white,
+                    size: widget.size / 4,
+                    style: HeroIconStyle.solid,
+                  ),
+                ),
               ),
+              if (widget.onFavouriteChanged != null)
+                Consumer<FavouritesModel>(
+                  builder: (context, favourites, _) => GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => setState(() {
+                      if (favourites.isFavourite(widget.trackDetail.name)) {
+                        favourites.removeFavourite(widget.trackDetail.name);
+                      } else {
+                        favourites.addFavourite(widget.trackDetail.name);
+                      }
+
+                      widget.onFavouriteChanged!(favourites.favourites.length);
+                    }),
+                    child: HeroIcon(
+                      HeroIcons.star,
+                      style: favourites.isFavourite(widget.trackDetail.name)
+                          ? HeroIconStyle.solid
+                          : HeroIconStyle.outline,
+                      color: Colors.white,
+                      size: widget.size / 4,
+                    ),
+                  ),
+                ),
             ],
           ),
-          // TODO: move pause button to here instead of stack?
-          child: Center(child: Text(widget.trackDetail.name.split('.')[0])),
-        ),
-        Consumer<AudioPlayerModel>(
-          builder: (context, player, _) => GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => setState(() {
-              player.switchOrPause(widget.trackDetail.name);
-            }),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 35),
-              child: Icon(
-                _isPlaying(player) ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
-                size: 48.0,
-              ),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

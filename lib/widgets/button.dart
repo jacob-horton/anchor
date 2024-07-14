@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
           children: [
             HeroIcon(icon),
             const SizedBox(width: 10),
-            Text(text),
+            Text(text, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

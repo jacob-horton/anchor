@@ -1,6 +1,6 @@
 import 'package:anchor/models/background.dart';
 import 'package:anchor/models/username.dart';
-import 'package:anchor/pages/settings.dart';
+import 'package:anchor/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,7 @@ class _EndPageState extends State<EndPage> {
               child: Consumer<UsernameModel>(
                 builder: (context, username, _) => Text(
                   username.username,
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             ),

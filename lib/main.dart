@@ -3,13 +3,14 @@ import 'package:anchor/models/background.dart';
 import 'package:anchor/models/favourites.dart';
 import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
-import 'package:anchor/pages/favourite.dart';
-import 'package:anchor/pages/other_music.dart';
+import 'package:anchor/pages/favourite_page.dart';
+import 'package:anchor/pages/level_page.dart';
 import 'package:anchor/widgets/keep_alive.dart';
 import 'package:anchor/widgets/music_player.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,9 +27,21 @@ class AnchorApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Anchor',
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(title: 'Flutter Demo Home Page'),
+      theme: ThemeData.dark().copyWith(
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme,
+        ).copyWith(
+          bodySmall: GoogleFonts.poppins(fontSize: 16.0),
+          bodyMedium: GoogleFonts.poppins(fontSize: 20.0),
+          titleMedium: GoogleFonts.poppins(
+            fontWeight: FontWeight.w700,
+            fontSize: 36.0,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -90,7 +103,7 @@ class _HomePageState extends State<HomePage> {
     if (vertPage != 0) {
       // We are scrolling vertically
       newNavUp = true;
-      newNavDown = vertPage < _tracks.length;
+      newNavDown = vertPage < 3; // 3 levels
     } else if (horizPage < _favouritesModel.favourites.length) {
       // We are scrolling horizontally
       newNavLeft = horizPage > 0;
@@ -111,9 +124,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Iterable<Widget> verticalPages = _tracks.values.map(
-      (t) => OtherMusicPage(
-        trackDetail: t,
+    final level1 = _tracks.values.where((t) => t.level == 1);
+    final level2 = _tracks.values.where((t) => t.level == 2);
+    final level3 = _tracks.values.where((t) => t.level == 3);
+
+    Iterable<Widget> verticalPages = [level1, level2, level3].map(
+      (tracks) => LevelPage(
+        trackDetails: tracks.toList(),
 
         // Make sure we scroll to the last page if we add/remove a favourite
         onFavouriteChanged: (numFavourites) =>

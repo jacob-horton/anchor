@@ -80,7 +80,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
         children: [
           Center(
             child: Text(
-              widget.trackDetail.name.split('.')[0],
+              AudioPlayerModel.formatFilename(widget.trackDetail.name),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),

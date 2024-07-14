@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 class AudioPlayerModel extends ChangeNotifier {
   String? _currentTrack;
@@ -11,7 +12,18 @@ class AudioPlayerModel extends ChangeNotifier {
 
   void switchOrPause(String track) async {
     if (_currentTrack != track) {
-      await _player.setAsset('music/$track');
+      await _player.setAudioSource(
+        AudioSource.uri(
+          Uri.parse('asset:///music/$track'),
+          tag: MediaItem(
+            id: track,
+            title: formatFilename(track),
+          ),
+        ),
+        initialPosition: Duration.zero,
+        preload: true,
+      );
+      // await _player.setAsset('music/$track');
       _currentTrack = track;
       _player.play();
     } else {
@@ -32,4 +44,9 @@ class AudioPlayerModel extends ChangeNotifier {
 
   bool get isPlaying => _player.playing;
   String? get currentTrack => _currentTrack;
+
+  static String formatFilename(String filename) {
+    final name = filename.split('.')[0];
+    return name[0].toUpperCase() + name.substring(1).toLowerCase();
+  }
 }

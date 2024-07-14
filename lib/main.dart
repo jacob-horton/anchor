@@ -11,9 +11,16 @@ import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.jcode.anchor.channel.audio',
+    androidNotificationChannelName: 'Anchor',
+    androidNotificationOngoing: true,
+  );
+
   runApp(const AnchorApp());
 }
 

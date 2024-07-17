@@ -73,7 +73,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
           ),
         ],
       ),
-      // TODO: move pause button to here instead of stack?
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

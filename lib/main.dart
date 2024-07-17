@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/background.dart';
 import 'package:anchor/models/favourites.dart';
@@ -115,7 +117,7 @@ class _HomePageState extends State<HomePage> {
       // We are scrolling vertically
       newNavUp = true;
       newNavDown = vertPage < 3; // 3 levels
-    } else if (horizPage < _favouritesModel.favourites.length) {
+    } else if (horizPage < max(1, _favouritesModel.favourites.length)) {
       // We are scrolling horizontally
       newNavLeft = horizPage > 0;
       newNavRight = true;
@@ -141,12 +143,12 @@ class _HomePageState extends State<HomePage> {
 
     Iterable<Widget> verticalPages = [level1, level2, level3].map(
       (tracks) => LevelPage(
-        trackDetails: tracks.toList(),
+          trackDetails: tracks.toList(),
 
-        // Make sure we scroll to the last page if we add/remove a favourite
-        onFavouriteChanged: (numFavourites) =>
-            _horizontalController.jumpToPage(numFavourites),
-      ),
+          // Make sure we scroll to the last page if we add/remove a favourite
+          onFavouriteChanged: (numFavourites) {
+            _horizontalController.jumpToPage(max(1, numFavourites));
+          }),
     );
 
     return ChangeNotifierProvider(
@@ -180,11 +182,12 @@ class _HomePageState extends State<HomePage> {
             onPageChanged: (_) => _onPageChange(),
             children: [
               Consumer<FavouritesModel>(
+                // Keep alive to ensure scroll position stays the same
                 builder: (context, favourites, _) => KeepAlivePage(
                   child: PageView.builder(
                     onPageChanged: (i) {
                       // Only allow scrolling vertically when at end of horizontal
-                      if (i == favourites.favourites.length) {
+                      if (i == max(1, favourites.favourites.length)) {
                         setState(() => _verticalScrollPhysics = null);
                       } else {
                         setState(() => _verticalScrollPhysics =
@@ -196,7 +199,47 @@ class _HomePageState extends State<HomePage> {
                     },
                     controller: _horizontalController,
                     itemBuilder: (context, i) {
-                      if (i == favourites.favourites.length) {
+                      if (favourites.favourites.isEmpty && i == 0) {
+                        final squareSize =
+                            MediaQuery.of(context).size.width / 2;
+
+                        return Center(
+                          child: Container(
+                            width: squareSize,
+                            height: squareSize,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.blue,
+                                  Colors.purple,
+                                  Colors.red,
+                                  Colors.orange,
+                                ],
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(squareSize / 5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 25,
+                                  spreadRadius: 5,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Please add a favourite",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (i == max(1, favourites.favourites.length)) {
                         return ChangeNotifierProvider(
                           create: (context) => UsernameModel(),
                           child: const EndPage(),
@@ -207,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                         trackDetail: _tracks[favourites.favourites[i]]!,
                       );
                     },
-                    itemCount: favourites.favourites.length + 1,
+                    itemCount: max(1, favourites.favourites.length) + 1,
                   ),
                 ),
               ),

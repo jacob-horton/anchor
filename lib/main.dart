@@ -206,39 +206,35 @@ class _HomePageState extends State<HomePage> {
                     controller: _horizontalController,
                     itemBuilder: (context, i) {
                       if (favourites.favourites.isEmpty && i == 0) {
-                        final squareSize =
-                            MediaQuery.of(context).size.width / 2;
-
-                        return Center(
-                          child: Container(
-                            width: squareSize,
-                            height: squareSize,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.blue,
-                                  Colors.purple,
-                                  Colors.red,
-                                  Colors.orange,
-                                ],
-                              ),
-                              borderRadius:
-                                  BorderRadius.circular(squareSize / 5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 25,
-                                  spreadRadius: 5,
-                                  offset: const Offset(0, 5),
+                        return Align(
+                          alignment: Alignment.center,
+                          child: Center(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                _horizontalController.jumpToPage(1);
+                                _verticalController.jumpToPage(1);
+                                _onPageChange();
+                              },
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Text(
+                                  "Please add a favourite",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                    fontSize: 28.0,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        offset: const Offset(0, 2),
+                                        blurRadius: 25,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Please add a favourite",
-                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),

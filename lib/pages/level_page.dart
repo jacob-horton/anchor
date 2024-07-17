@@ -1,3 +1,4 @@
+import 'package:anchor/widgets/audio_progress_bar.dart';
 import 'package:anchor/widgets/music_player.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,6 @@ import 'package:flutter/material.dart';
 class LevelPage extends StatelessWidget {
   final List<TrackDetail> trackDetails;
   final void Function(int numFavourites) onFavouriteChanged;
-
-  static const levelToColour = [Colors.red, Colors.yellow, Colors.green];
 
   const LevelPage({
     super.key,
@@ -20,7 +19,7 @@ class LevelPage extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 100),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 90),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,7 +47,7 @@ class LevelPage extends StatelessWidget {
                       children: row
                           .map(
                             (trackDetail) => Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: MusicPlayer(
                                 trackDetail: trackDetail,
                                 size: albumSize,
@@ -61,6 +60,8 @@ class LevelPage extends StatelessWidget {
                   )
                   .toList(),
             ),
+            Expanded(child: Container()),
+            const AudioProgressBar(),
           ],
         ),
       ),

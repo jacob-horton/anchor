@@ -42,8 +42,25 @@ class AudioPlayerModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void togglePausePlay() async {
+    if (_player.playing) {
+      await _player.pause();
+    } else {
+      _player.play();
+    }
+
+    notifyListeners();
+  }
+
+  void seek(Duration position) async {
+    await _player.seek(position);
+  }
+
   bool get isPlaying => _player.playing;
   String? get currentTrack => _currentTrack;
+
+  Stream<Duration> get stream => _player.positionStream;
+  Duration? get duration => _player.duration;
 
   static String formatFilename(String filename) {
     final name = filename.split('.')[0];

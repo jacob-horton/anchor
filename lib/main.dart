@@ -186,6 +186,12 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, favourites, _) => KeepAlivePage(
                   child: PageView.builder(
                     onPageChanged: (i) {
+                      // Skip page change if in level pages
+                      // Any page changes there will be to jump to end
+                      if ((_verticalController.page ?? 0) > 0) {
+                        return;
+                      }
+
                       // Only allow scrolling vertically when at end of horizontal
                       if (i == max(1, favourites.favourites.length)) {
                         setState(() => _verticalScrollPhysics = null);

@@ -33,16 +33,16 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   static final levelColours = [
     [
-      Colors.lightGreen,
-      Colors.green,
+      const Color(0xff83E78D),
+      const Color(0xff65C76F),
     ],
     [
-      Colors.cyan[200],
-      Colors.blue,
+      const Color(0xffA8EFFF),
+      const Color(0xff87A6F4),
     ],
     [
-      const Color(0xfffce1f3),
-      const Color(0xffffb0d4),
+      const Color(0xffCEB7FF),
+      const Color(0xffAF93FF),
     ],
   ];
 
@@ -59,9 +59,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: levelColours[widget.trackDetail.level - 1]
-              .map((c) => c!)
-              .toList(),
+          colors: levelColours[widget.trackDetail.level - 1],
         ),
         borderRadius: BorderRadius.circular(widget.size / 5),
         boxShadow: [
@@ -80,7 +78,15 @@ class _MusicPlayerState extends State<MusicPlayer> {
           Center(
             child: Text(
               AudioPlayerModel.formatFilename(widget.trackDetail.name),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: const Offset(0, 1),
+                    blurRadius: 30,
+                  )
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 20.0),

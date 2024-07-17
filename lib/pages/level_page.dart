@@ -27,7 +27,15 @@ class LevelPage extends StatelessWidget {
           children: [
             Text(
               "Level ${trackDetails[0].level}",
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 25,
+                  )
+                ],
+              ),
             ),
             const SizedBox(height: 20.0),
             Column(

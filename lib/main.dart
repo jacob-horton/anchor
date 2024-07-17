@@ -151,24 +151,27 @@ class _HomePageState extends State<HomePage> {
           }),
     );
 
+    const animationDuration = Durations.medium4;
+    const animationCurve = Curves.easeInOut;
+
     return ChangeNotifierProvider(
       create: (context) => BackgroundModel(),
       child: PageTemplate(
         onNavigateLeft: _navLeft
             ? () => _horizontalController.previousPage(
-                duration: Durations.short2, curve: Curves.easeInOut)
+                duration: animationDuration, curve: animationCurve)
             : null,
         onNavigateRight: _navRight
             ? () => _horizontalController.nextPage(
-                duration: Durations.short2, curve: Curves.easeInOut)
+                duration: animationDuration, curve: animationCurve)
             : null,
         onNavigateUp: _navUp
             ? () => _verticalController.previousPage(
-                duration: Durations.short2, curve: Curves.easeInOut)
+                duration: animationDuration, curve: animationCurve)
             : null,
         onNavigateDown: _navDown
             ? () => _verticalController.nextPage(
-                duration: Durations.short2, curve: Curves.easeInOut)
+                duration: animationDuration, curve: animationCurve)
             : null,
         body: MultiProvider(
           providers: [

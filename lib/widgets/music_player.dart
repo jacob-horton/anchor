@@ -71,69 +71,79 @@ class _MusicPlayerState extends State<MusicPlayer> {
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              AudioPlayerModel.formatFilename(widget.trackDetail.name),
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(0, 1),
-                    blurRadius: 30,
-                  )
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Consumer<AudioPlayerModel>(
-                builder: (context, player, _) => GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => setState(() {
-                    player.switchOrPause(widget.trackDetail.name);
-                  }),
-                  child: HeroIcon(
-                    _isPlaying(player) ? HeroIcons.pause : HeroIcons.play,
-                    color: Colors.white,
-                    size: widget.size / 4,
-                    style: HeroIconStyle.solid,
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                AudioPlayerModel.formatFilename(widget.trackDetail.name),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(0, 1),
+                      blurRadius: 30,
+                    )
+                  ],
                 ),
               ),
-              if (widget.onFavouriteChanged != null)
-                Consumer<FavouritesModel>(
-                  builder: (context, favourites, _) => GestureDetector(
+            ),
+            const SizedBox(height: 5.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Consumer<AudioPlayerModel>(
+                  builder: (context, player, _) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => setState(() {
-                      if (favourites.isFavourite(widget.trackDetail.name)) {
-                        favourites.removeFavourite(widget.trackDetail.name);
-                      } else {
-                        favourites.addFavourite(widget.trackDetail.name);
-                      }
-
-                      widget.onFavouriteChanged!(favourites.favourites.length);
+                      player.switchOrPause(widget.trackDetail.name);
                     }),
-                    child: HeroIcon(
-                      HeroIcons.star,
-                      style: favourites.isFavourite(widget.trackDetail.name)
-                          ? HeroIconStyle.solid
-                          : HeroIconStyle.outline,
-                      color: Colors.white,
-                      size: widget.size / 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: HeroIcon(
+                        _isPlaying(player) ? HeroIcons.pause : HeroIcons.play,
+                        color: Colors.white,
+                        size: widget.size / 4,
+                        style: HeroIconStyle.solid,
+                      ),
                     ),
                   ),
                 ),
-            ],
-          ),
-        ],
+                if (widget.onFavouriteChanged != null)
+                  Consumer<FavouritesModel>(
+                    builder: (context, favourites, _) => GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => setState(() {
+                        if (favourites.isFavourite(widget.trackDetail.name)) {
+                          favourites.removeFavourite(widget.trackDetail.name);
+                        } else {
+                          favourites.addFavourite(widget.trackDetail.name);
+                        }
+
+                        widget
+                            .onFavouriteChanged!(favourites.favourites.length);
+                      }),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: HeroIcon(
+                          HeroIcons.star,
+                          style: favourites.isFavourite(widget.trackDetail.name)
+                              ? HeroIconStyle.solid
+                              : HeroIconStyle.outline,
+                          color: Colors.white,
+                          size: widget.size / 4,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

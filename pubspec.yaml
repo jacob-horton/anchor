@@ -43,6 +43,7 @@ dependencies:
   google_fonts: ^6.2.1
   just_audio_background: ^0.0.1-beta.13
   audio_video_progress_bar: ^2.0.3
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,10 @@ flutter:
     - images/sea.jpg
     - images/stars.jpg
     - images/sunset.jpg
+
+    - images/level-1-album-art.png
+    - images/level-2-album-art.png
+    - images/level-3-album-art.png
 
     - music/breeze.ogg
     - music/change.ogg

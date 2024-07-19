@@ -100,7 +100,10 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   builder: (context, player, _) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => setState(() {
-                      player.switchOrPause(widget.trackDetail.name);
+                      player.switchOrPause(
+                        widget.trackDetail.name,
+                        widget.trackDetail.level,
+                      );
                     }),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),

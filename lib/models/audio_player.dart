@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AudioPlayerModel extends ChangeNotifier {
   String? _currentTrack;
@@ -10,7 +14,7 @@ class AudioPlayerModel extends ChangeNotifier {
     _player.setLoopMode(LoopMode.all);
   }
 
-  void switchOrPause(String track) async {
+  void switchOrPause(String track, int level) async {
     if (_currentTrack != track) {
       await _player.setAudioSource(
         AudioSource.uri(
@@ -18,6 +22,7 @@ class AudioPlayerModel extends ChangeNotifier {
           tag: MediaItem(
             id: track,
             title: formatFilename(track),
+            artUri: await _getImageFileFromAssets(level),
           ),
         ),
         initialPosition: Duration.zero,
@@ -35,6 +40,22 @@ class AudioPlayerModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<Uri> _getImageFileFromAssets(int level) async {
+    final fileName = 'level-$level-album-art.png';
+    final byteData = await rootBundle.load('images/$fileName');
+    final buffer = byteData.buffer;
+
+    Directory tempDir = await getApplicationDocumentsDirectory();
+    String tempPath = tempDir.path;
+    var filePath = '$tempPath/$fileName';
+
+    return (await File(filePath).writeAsBytes(buffer.asUint8List(
+      byteData.offsetInBytes,
+      byteData.lengthInBytes,
+    )))
+        .uri;
   }
 
   void pause() async {

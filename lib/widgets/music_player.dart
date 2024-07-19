@@ -91,7 +91,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 ),
               ),
             ),
-            const SizedBox(height: 5.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,

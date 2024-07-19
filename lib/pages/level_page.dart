@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:anchor/widgets/audio_progress_bar.dart';
 import 'package:anchor/widgets/music_player.dart';
 import 'package:collection/collection.dart';
@@ -15,11 +17,12 @@ class LevelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final albumSize = MediaQuery.of(context).size.width / 2.75;
+    final displaySize = MediaQuery.of(context).size;
+    final albumSize = min(displaySize.height / 6, displaySize.width / 2.75);
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 90),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,7 +39,7 @@ class LevelPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: trackDetails
@@ -47,7 +50,7 @@ class LevelPage extends StatelessWidget {
                       children: row
                           .map(
                             (trackDetail) => Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: MusicPlayer(
                                 trackDetail: trackDetail,
                                 size: albumSize,
@@ -60,7 +63,6 @@ class LevelPage extends StatelessWidget {
                   )
                   .toList(),
             ),
-            Expanded(child: Container()),
             const AudioProgressBar(),
           ],
         ),

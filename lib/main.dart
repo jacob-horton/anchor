@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/background.dart';
 import 'package:anchor/models/favourites.dart';
+import 'package:anchor/models/hide_foreground.dart';
 import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite_page.dart';
@@ -59,6 +60,23 @@ class AnchorApp extends StatelessWidget {
   }
 }
 
+enum PageType {
+  leftMostFavourite,
+  favourite,
+  corner,
+  level,
+  bottomMostLevel,
+}
+
+class _Navigators {
+  void Function()? left;
+  void Function()? right;
+  void Function()? up;
+  void Function()? down;
+
+  _Navigators({this.left, this.right, this.up, this.down});
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
   final String title;
@@ -94,15 +112,43 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final _horizontalController = PageController();
   final _verticalController = PageController();
 
+  static const _animationDuration = Durations.medium4;
+  static const _animationCurve = Curves.easeInOut;
+
+  get navLeft => () => _horizontalController.previousPage(
+      duration: _animationDuration, curve: _animationCurve);
+  get navRight => () => _horizontalController.nextPage(
+      duration: _animationDuration, curve: _animationCurve);
+  get navUp => () => _verticalController.previousPage(
+      duration: _animationDuration, curve: _animationCurve);
+  get navDown => () => _verticalController.nextPage(
+      duration: _animationDuration, curve: _animationCurve);
+
+  _Navigators getNavigators(PageType pageType, bool hideForeground) {
+    if (hideForeground && pageType == PageType.corner) {
+      return _Navigators();
+    }
+
+    switch (pageType) {
+      case PageType.leftMostFavourite:
+        return _Navigators(right: navRight);
+      case PageType.favourite:
+        return _Navigators(left: navLeft, right: navRight);
+      case PageType.corner:
+        return _Navigators(left: navLeft, down: navDown);
+      case PageType.level:
+        return _Navigators(up: navUp, down: navDown);
+      case PageType.bottomMostLevel:
+        return _Navigators(up: navUp);
+    }
+  }
+
   final _favouritesModel = FavouritesModel();
   final _audioPlayerModel = AudioPlayerModel();
 
   ScrollPhysics? _verticalScrollPhysics = const NeverScrollableScrollPhysics();
 
-  bool _navLeft = false;
-  bool _navRight = true;
-  bool _navUp = false;
-  bool _navDown = false;
+  PageType _pageType = PageType.leftMostFavourite;
 
   @override
   void initState() {
@@ -112,33 +158,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void _onPageChange() {
     // Set navigation buttons
-    bool newNavLeft = false;
-    bool newNavRight = false;
-    bool newNavUp = false;
-    bool newNavDown = false;
+    PageType newPageType;
 
     final horizPage = (_horizontalController.page ?? 0.0).round();
     final vertPage = (_verticalController.page ?? 0.0).round();
     if (vertPage != 0) {
       // We are scrolling vertically
-      newNavUp = true;
-      newNavDown = vertPage < 3; // 3 levels
+      if (vertPage < 3) {
+        newPageType = PageType.level;
+      } else {
+        newPageType = PageType.bottomMostLevel;
+      }
     } else if (horizPage < max(1, _favouritesModel.favourites.length)) {
       // We are scrolling horizontally
-      newNavLeft = horizPage > 0;
-      newNavRight = true;
+      if (horizPage > 0) {
+        newPageType = PageType.favourite;
+      } else {
+        newPageType = PageType.leftMostFavourite;
+      }
     } else {
-      // We are at end page
-      newNavLeft = true;
-      newNavDown = true;
+      // We are at corner page
+      newPageType = PageType.corner;
     }
 
-    setState(() {
-      _navLeft = newNavLeft;
-      _navRight = newNavRight;
-      _navUp = newNavUp;
-      _navDown = newNavDown;
-    });
+    setState(() => _pageType = newPageType);
   }
 
   @override
@@ -157,29 +200,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           }),
     );
 
-    const animationDuration = Durations.medium4;
-    const animationCurve = Curves.easeInOut;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => BackgroundModel()),
+        ChangeNotifierProvider(create: (context) => HideForegroundModel()),
+      ],
+      child: Consumer<HideForegroundModel>(
+        builder: (context, hideForegroundModel, child) {
+          _Navigators navigators =
+              getNavigators(_pageType, hideForegroundModel.hideForeground);
 
-    return ChangeNotifierProvider(
-      create: (context) => BackgroundModel(),
-      child: PageTemplate(
-        onNavigateLeft: _navLeft
-            ? () => _horizontalController.previousPage(
-                duration: animationDuration, curve: animationCurve)
-            : null,
-        onNavigateRight: _navRight
-            ? () => _horizontalController.nextPage(
-                duration: animationDuration, curve: animationCurve)
-            : null,
-        onNavigateUp: _navUp
-            ? () => _verticalController.previousPage(
-                duration: animationDuration, curve: animationCurve)
-            : null,
-        onNavigateDown: _navDown
-            ? () => _verticalController.nextPage(
-                duration: animationDuration, curve: animationCurve)
-            : null,
-        body: MultiProvider(
+          return PageTemplate(
+            onNavigateLeft: navigators.left,
+            onNavigateRight: navigators.right,
+            onNavigateUp: navigators.up,
+            onNavigateDown: navigators.down,
+            body: child!,
+          );
+        },
+        child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => _audioPlayerModel),
             ChangeNotifierProvider(create: (context) => _favouritesModel),

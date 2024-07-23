@@ -28,7 +28,7 @@ class AudioPlayerModel extends ChangeNotifier {
         initialPosition: Duration.zero,
         preload: true,
       );
-      // await _player.setAsset('music/$track');
+
       _currentTrack = track;
       _player.play();
     } else {
@@ -63,6 +63,11 @@ class AudioPlayerModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void stop() async {
+    await _player.stop();
+    notifyListeners();
+  }
+
   void togglePausePlay() async {
     if (_player.playing) {
       await _player.pause();
@@ -86,5 +91,11 @@ class AudioPlayerModel extends ChangeNotifier {
   static String formatFilename(String filename) {
     final name = filename.split('.')[0];
     return name[0].toUpperCase() + name.substring(1).toLowerCase();
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
   }
 }

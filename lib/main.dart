@@ -67,7 +67,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static const _tracks = {
     // Level 1
     'breeze.ogg': TrackDetail(name: 'breeze.ogg', level: 1),
@@ -103,6 +103,12 @@ class _HomePageState extends State<HomePage> {
   bool _navRight = true;
   bool _navUp = false;
   bool _navDown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   void _onPageChange() {
     // Set navigation buttons
@@ -265,5 +271,27 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state != AppLifecycleState.detached) {
+      return;
+    }
+
+    _audioPlayerModel.stop();
+    _audioPlayerModel.dispose();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

@@ -115,33 +115,35 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     ),
                   ),
                 ),
-                if (widget.onFavouriteChanged != null)
-                  Consumer<FavouritesModel>(
-                    builder: (context, favourites, _) => GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => setState(() {
-                        if (favourites.isFavourite(widget.trackDetail.name)) {
-                          favourites.removeFavourite(widget.trackDetail.name);
-                        } else {
-                          favourites.addFavourite(widget.trackDetail.name);
-                        }
+                Consumer<FavouritesModel>(
+                  builder: (context, favourites, _) => GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => setState(() {
+                      if (favourites.isFavourite(widget.trackDetail.name)) {
+                        favourites.removeFavourite(widget.trackDetail.name);
+                      } else {
+                        favourites.addFavourite(widget.trackDetail.name);
+                      }
 
-                        widget
-                            .onFavouriteChanged!(favourites.favourites.length);
-                      }),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: HeroIcon(
-                          HeroIcons.star,
-                          style: favourites.isFavourite(widget.trackDetail.name)
-                              ? HeroIconStyle.solid
-                              : HeroIconStyle.outline,
-                          color: Colors.white,
-                          size: widget.size / 4,
-                        ),
+                      if (widget.onFavouriteChanged != null) {
+                        widget.onFavouriteChanged!(
+                          favourites.favourites.length,
+                        );
+                      }
+                    }),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: HeroIcon(
+                        HeroIcons.star,
+                        style: favourites.isFavourite(widget.trackDetail.name)
+                            ? HeroIconStyle.solid
+                            : HeroIconStyle.outline,
+                        color: Colors.white,
+                        size: widget.size / 4,
                       ),
                     ),
                   ),
+                ),
               ],
             ),
           ],

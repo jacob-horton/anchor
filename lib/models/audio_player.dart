@@ -12,6 +12,7 @@ class AudioPlayerModel extends ChangeNotifier {
 
   AudioPlayerModel() {
     _player.setLoopMode(LoopMode.all);
+    _player.playingStream.listen((_) => notifyListeners());
   }
 
   void switchOrPause(String track, int level) async {

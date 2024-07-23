@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/release
 
 /music
+
+/signing
+/android/key.properties

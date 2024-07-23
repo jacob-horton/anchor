@@ -78,16 +78,19 @@ class _MusicPlayerState extends State<MusicPlayer> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Text(
-                AudioPlayerModel.formatFilename(widget.trackDetail.name),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.3),
-                      offset: const Offset(0, 1),
-                      blurRadius: 30,
-                    )
-                  ],
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  AudioPlayerModel.formatFilename(widget.trackDetail.name),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.3),
+                        offset: const Offset(0, 1),
+                        blurRadius: 30,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

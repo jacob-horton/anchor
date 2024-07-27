@@ -182,6 +182,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
 
     setState(() => _pageType = newPageType);
+
+    // Unforcus text fields
+    FocusScope.of(context).focusedChild?.unfocus();
   }
 
   @override

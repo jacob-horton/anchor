@@ -28,6 +28,8 @@ class _EndPageState extends State<EndPage> {
     if (_usernameModel == null) {
       // Setup listener to update controller when username changes
       _usernameModel = Provider.of<UsernameModel>(context);
+      _usernameController.text = _usernameModel!.username;
+
       _usernameListener = () {
         _usernameController.text = _usernameModel!.username;
       };

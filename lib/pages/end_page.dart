@@ -49,10 +49,10 @@ class _EndPageState extends State<EndPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: SizedBox(
-                          width: 200,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30, top: 30, bottom: 30),
                           child: TextField(
                             controller: _usernameController,
                             onChanged: (text) =>

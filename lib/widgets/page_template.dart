@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anchor/models/background.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
@@ -129,7 +131,9 @@ class _PageTemplateState extends State<PageTemplate> {
               return Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(backgroundModel.path),
+                    image: backgroundModel.isAsset
+                        ? AssetImage(backgroundModel.path)
+                        : FileImage(File(backgroundModel.path)),
                     fit: BoxFit.cover,
                   ),
                 ),

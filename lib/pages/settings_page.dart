@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:anchor/models/background.dart';
 import 'package:anchor/models/username.dart';
 import 'package:anchor/widgets/button.dart';
 import 'package:anchor/widgets/page_template.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as p;
 
 class SettingsPage extends StatelessWidget {
   late final SharedPreferences prefs;
@@ -97,8 +102,10 @@ class SettingsPage extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return BackgroundButton(
-                              initialBackground: background.filename,
-                              onSave: (f) => background.updateFilename(f),
+                              initialBackground: background.path,
+                              onSave: (f, isAsset) => isAsset
+                                  ? background.setToAsset(f)
+                                  : background.setToCustomImage(f),
                             );
                           },
                         );
@@ -165,7 +172,7 @@ class SettingsPage extends StatelessWidget {
 
 class BackgroundButton extends StatefulWidget {
   final String initialBackground;
-  final void Function(String filename) onSave;
+  final void Function(String filename, bool isAsset) onSave;
 
   const BackgroundButton({
     super.key,
@@ -179,10 +186,10 @@ class BackgroundButton extends StatefulWidget {
 
 class _BackgroundButtonState extends State<BackgroundButton> {
   static const backgrounds = [
-    'northern-lights.jpg',
-    'sea.jpg',
-    'stars.jpg',
-    'sunset.jpg',
+    'images/northern-lights.jpg',
+    'images/sea.jpg',
+    'images/stars.jpg',
+    'images/sunset.jpg',
   ];
 
   late String selectedBackground;
@@ -200,48 +207,75 @@ class _BackgroundButtonState extends State<BackgroundButton> {
         'Choose Background',
         style: Theme.of(context).textTheme.titleSmall,
       ),
-      content: SizedBox(
-        height: 250,
-        width: MediaQuery.of(context).size.width,
-        child: GridView.count(
-          crossAxisCount: 2,
-          children: backgrounds
-              .map(
-                (b) => GestureDetector(
-                  onTap: () {
-                    setState(() => selectedBackground = b);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Stack(
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Image(
-                            image: AssetImage('images/$b'),
-                            // width: 36,
-                            // height: 36,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        if (selectedBackground == b)
-                          Container(
-                            color: Colors.black38,
-                            child: const Center(
-                              child: HeroIcon(
-                                HeroIcons.check,
-                                color: Colors.white,
-                                style: HeroIconStyle.micro,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 250,
+            width: MediaQuery.of(context).size.width,
+            child: GridView.count(
+              crossAxisCount: 2,
+              children: backgrounds
+                  .map(
+                    (b) => GestureDetector(
+                      onTap: () {
+                        setState(() => selectedBackground = b);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Stack(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: Image(
+                                image: AssetImage(b),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                      ],
+                            if (selectedBackground == b)
+                              Container(
+                                color: Colors.black38,
+                                child: const Center(
+                                  child: HeroIcon(
+                                    HeroIcons.check,
+                                    color: Colors.white,
+                                    style: HeroIconStyle.micro,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
+                  )
+                  .toList(),
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          CustomButton(
+            text: "Select from library",
+            icon: HeroIcons.photo,
+            onPressed: () async {
+              final ImagePicker picker = ImagePicker();
+              final XFile? image =
+                  await picker.pickImage(source: ImageSource.gallery);
+
+              if (image == null) {
+                return;
+              }
+
+              final String destDir =
+                  (await getApplicationDocumentsDirectory()).path;
+
+              final ext = p.extension(image.path);
+              final timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
+              final path = '$destDir/custom-background-$timestamp$ext';
+              await image.saveTo(path);
+
+              setState(() => selectedBackground = path);
+            },
+          ),
+        ],
       ),
       actions: [
         TextButton(
@@ -254,7 +288,10 @@ class _BackgroundButtonState extends State<BackgroundButton> {
         TextButton(
           child: const Text('Save'),
           onPressed: () {
-            widget.onSave(selectedBackground);
+            widget.onSave(
+              selectedBackground,
+              backgrounds.contains(selectedBackground),
+            );
             Navigator.of(context).pop();
           },
         ),

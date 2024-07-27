@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UsernameModel extends ChangeNotifier {
-  String _username = 'User';
+  String _username = 'Name';
   late final SharedPreferences _prefs;
 
   UsernameModel() {

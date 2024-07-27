@@ -14,6 +14,10 @@ class EndPage extends StatefulWidget {
 }
 
 class _EndPageState extends State<EndPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  UsernameModel? _usernameModel;
+  void Function()? _usernameListener;
+
   @override
   void initState() {
     super.initState();
@@ -21,6 +25,16 @@ class _EndPageState extends State<EndPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_usernameModel == null) {
+      // Setup listener to update controller when username changes
+      _usernameModel = Provider.of<UsernameModel>(context);
+      _usernameListener = () {
+        _usernameController.text = _usernameModel!.username;
+      };
+
+      _usernameModel!.addListener(_usernameListener!);
+    }
+
     return Consumer<HideForegroundModel>(
       builder: (context, hideForegroundModel, child) => GestureDetector(
         onTap: () => setState(() => hideForegroundModel.toggleHideForeground()),
@@ -35,9 +49,14 @@ class _EndPageState extends State<EndPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(30),
-                        child: Consumer<UsernameModel>(
-                          builder: (context, username, _) => Text(
-                            username.username,
+                        child: SizedBox(
+                          width: 200,
+                          child: TextField(
+                            controller: _usernameController,
+                            onChanged: (text) =>
+                                _usernameModel!.username = text,
+                            decoration:
+                                const InputDecoration(border: InputBorder.none),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
@@ -58,6 +77,8 @@ class _EndPageState extends State<EndPage> {
                         onTap: () {
                           final background = context.read<BackgroundModel>();
                           final username = context.read<UsernameModel>();
+
+                          FocusScope.of(context).focusedChild?.unfocus();
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -103,5 +124,14 @@ class _EndPageState extends State<EndPage> {
               ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_usernameListener != null) {
+      _usernameModel?.removeListener(_usernameListener!);
+    }
+
+    super.dispose();
   }
 }

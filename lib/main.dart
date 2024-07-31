@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   await JustAudioBackground.init(
@@ -187,8 +188,47 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     FocusScope.of(context).focusedChild?.unfocus();
   }
 
+  static const keyIsFirstLoad = 'is-first-load';
+  _showDialogIfFirstLoad(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLoaded = prefs.getBool(keyIsFirstLoad) ?? true;
+
+    if (!context.mounted) {
+      return;
+    }
+
+    if (isFirstLoaded) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Welcome",
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            content: Text(
+              "- Swipe between pages\n- Press star to add to your favourites for easy access\n- Change background in settings",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("Dismiss"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  prefs.setBool(keyIsFirstLoad, false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _showDialogIfFirstLoad(context);
+
     final level1 = _tracks.values.where((t) => t.level == 1);
     final level2 = _tracks.values.where((t) => t.level == 2);
     final level3 = _tracks.values.where((t) => t.level == 3);

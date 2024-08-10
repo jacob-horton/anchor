@@ -61,8 +61,8 @@ class _EndPageState extends State<EndPage> {
                                 const InputDecoration(border: InputBorder.none),
                             style: Theme.of(context)
                                 .textTheme
-                                .titleMedium!
-                                .copyWith(
+                                .titleMedium
+                                ?.copyWith(
                               shadows: [
                                 Shadow(
                                   color: Colors.black.withOpacity(0.2),

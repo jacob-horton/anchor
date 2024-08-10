@@ -72,7 +72,7 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(width: 10.0),
                   Text(
                     "Settings",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       shadows: [
                         Shadow(
                           color: Colors.black.withOpacity(0.2),

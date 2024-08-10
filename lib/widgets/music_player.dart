@@ -82,7 +82,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 fit: BoxFit.fitWidth,
                 child: Text(
                   AudioPlayerModel.formatFilename(widget.trackDetail.name),
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     shadows: [
                       Shadow(
                         color: Colors.black.withOpacity(0.3),

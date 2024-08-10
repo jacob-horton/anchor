@@ -42,7 +42,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/tracks
+/assets/tracks
 
 /signing
 /android/key.properties

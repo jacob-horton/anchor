@@ -186,10 +186,10 @@ class BackgroundButton extends StatefulWidget {
 
 class _BackgroundButtonState extends State<BackgroundButton> {
   static const backgrounds = [
-    'images/northern-lights.jpg',
-    'images/sea.jpg',
-    'images/stars.jpg',
-    'images/sunset.jpg',
+    'assets/images/northern-lights.jpg',
+    'assets/images/sea.jpg',
+    'assets/images/stars.jpg',
+    'assets/images/sunset.jpg',
   ];
 
   late String selectedBackground;

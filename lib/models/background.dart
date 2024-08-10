@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackgroundModel extends ChangeNotifier {
-  String _filepath = 'images/northern-lights.jpg';
+  String _filepath = 'assets/images/northern-lights.jpg';
   bool _isAsset = true;
 
   late final SharedPreferences _prefs;

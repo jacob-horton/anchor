@@ -19,7 +19,7 @@ class AudioPlayerModel extends ChangeNotifier {
     if (_currentTrack != track) {
       await _player.setAudioSource(
         AudioSource.uri(
-          Uri.parse('asset:///track/$track'),
+          Uri.parse('asset:///tracks/$track'),
           tag: MediaItem(
             id: track,
             title: formatFilename(track),
@@ -45,7 +45,7 @@ class AudioPlayerModel extends ChangeNotifier {
 
   Future<Uri> _getImageFileFromAssets(int level) async {
     final fileName = 'level-$level-album-art.png';
-    final byteData = await rootBundle.load('images/$fileName');
+    final byteData = await rootBundle.load('assets/images/$fileName');
     final buffer = byteData.buffer;
 
     Directory tempDir = await getApplicationDocumentsDirectory();

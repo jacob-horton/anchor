@@ -8,9 +8,8 @@ import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite_page.dart';
 import 'package:anchor/pages/level_page.dart';
-import 'package:anchor/widgets/keep_alive.dart';
 import 'package:anchor/widgets/music_player.dart';
-import 'package:anchor/widgets/page_template.dart';
+import 'package:anchor/widgets/page_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,23 +60,6 @@ class AnchorApp extends StatelessWidget {
   }
 }
 
-enum PageType {
-  leftMostFavourite,
-  favourite,
-  corner,
-  level,
-  bottomMostLevel,
-}
-
-class _Navigators {
-  void Function()? left;
-  void Function()? right;
-  void Function()? up;
-  void Function()? down;
-
-  _Navigators({this.left, this.right, this.up, this.down});
-}
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
   final String title;
@@ -113,79 +95,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final _horizontalController = PageController();
   final _verticalController = PageController();
 
-  static const _animationDuration = Durations.medium4;
-  static const _animationCurve = Curves.easeInOut;
-
-  get navLeft => () => _horizontalController.previousPage(
-      duration: _animationDuration, curve: _animationCurve);
-  get navRight => () => _horizontalController.nextPage(
-      duration: _animationDuration, curve: _animationCurve);
-  get navUp => () => _verticalController.previousPage(
-      duration: _animationDuration, curve: _animationCurve);
-  get navDown => () => _verticalController.nextPage(
-      duration: _animationDuration, curve: _animationCurve);
-
-  _Navigators getNavigators(PageType pageType, bool hideForeground) {
-    if (hideForeground && pageType == PageType.corner) {
-      return _Navigators();
-    }
-
-    switch (pageType) {
-      case PageType.leftMostFavourite:
-        return _Navigators(right: navRight);
-      case PageType.favourite:
-        return _Navigators(left: navLeft, right: navRight);
-      case PageType.corner:
-        return _Navigators(left: navLeft, down: navDown);
-      case PageType.level:
-        return _Navigators(up: navUp, down: navDown);
-      case PageType.bottomMostLevel:
-        return _Navigators(up: navUp);
-    }
-  }
-
   final _favouritesModel = FavouritesModel();
   final _audioPlayerModel = AudioPlayerModel();
-
-  ScrollPhysics? _verticalScrollPhysics = const NeverScrollableScrollPhysics();
-
-  PageType _pageType = PageType.leftMostFavourite;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-  }
-
-  void _onPageChange() {
-    // Set navigation buttons
-    PageType newPageType;
-
-    final horizPage = (_horizontalController.page ?? 0.0).round();
-    final vertPage = (_verticalController.page ?? 0.0).round();
-    if (vertPage != 0) {
-      // We are scrolling vertically
-      if (vertPage < 3) {
-        newPageType = PageType.level;
-      } else {
-        newPageType = PageType.bottomMostLevel;
-      }
-    } else if (horizPage < max(1, _favouritesModel.favourites.length)) {
-      // We are scrolling horizontally
-      if (horizPage > 0) {
-        newPageType = PageType.favourite;
-      } else {
-        newPageType = PageType.leftMostFavourite;
-      }
-    } else {
-      // We are at corner page
-      newPageType = PageType.corner;
-    }
-
-    setState(() => _pageType = newPageType);
-
-    // Unforcus text fields
-    FocusScope.of(context).focusedChild?.unfocus();
   }
 
   static const _keyIsFirstLoad = 'is-first-load';
@@ -263,108 +179,46 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       providers: [
         ChangeNotifierProvider(create: (context) => BackgroundModel()),
         ChangeNotifierProvider(create: (context) => HideForegroundModel()),
+        ChangeNotifierProvider(create: (context) => _audioPlayerModel),
+        ChangeNotifierProvider(create: (context) => _favouritesModel),
       ],
-      child: Consumer<HideForegroundModel>(
-        builder: (context, hideForegroundModel, child) {
-          _Navigators navigators =
-              getNavigators(_pageType, hideForegroundModel.hideForeground);
-
-          return PageTemplate(
-            onNavigateLeft: navigators.left,
-            onNavigateRight: navigators.right,
-            onNavigateUp: navigators.up,
-            onNavigateDown: navigators.down,
-            body: child!,
-          );
-        },
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => _audioPlayerModel),
-            ChangeNotifierProvider(create: (context) => _favouritesModel),
-          ],
-          child: PageView(
-            scrollDirection: Axis.vertical,
-            physics: _verticalScrollPhysics,
-            controller: _verticalController,
-            onPageChanged: (_) => _onPageChange(),
-            children: [
-              Consumer<FavouritesModel>(
-                // Keep alive to ensure scroll position stays the same
-                builder: (context, favourites, _) => KeepAlivePage(
-                  child: PageView.builder(
-                    onPageChanged: (i) {
-                      // Skip page change if in level pages
-                      // Any page changes there will be to jump to end
-                      if ((_verticalController.page ?? 0) > 0) {
-                        return;
-                      }
-
-                      // Only allow scrolling vertically when at end of horizontal
-                      if (i == max(1, favourites.favourites.length)) {
-                        setState(() => _verticalScrollPhysics = null);
-                      } else {
-                        setState(() => _verticalScrollPhysics =
-                            const NeverScrollableScrollPhysics());
-                      }
-
-                      // Update arrows
-                      _onPageChange();
-                    },
-                    controller: _horizontalController,
-                    itemBuilder: (context, i) {
-                      if (favourites.favourites.isEmpty && i == 0) {
-                        return Align(
-                          alignment: Alignment.center,
-                          child: Center(
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                _horizontalController.jumpToPage(1);
-                                _verticalController.jumpToPage(1);
-                                _onPageChange();
-                              },
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Text(
-                                  "Please add a favourite",
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(
-                                    fontSize: 28.0,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                        blurRadius: 25,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (i == max(1, favourites.favourites.length)) {
-                        return ChangeNotifierProvider(
-                          create: (context) => UsernameModel(),
-                          child: const EndPage(),
-                        );
-                      }
-
-                      return FavouritePage(
-                        trackDetail: _tracks[favourites.favourites[i]]!,
-                      );
-                    },
-                    itemCount: max(1, favourites.favourites.length) + 1,
+      child: Consumer<FavouritesModel>(
+        builder: (context, favouritesModel, child) => PageNavigator(
+          horizontalController: _horizontalController,
+          verticalController: _verticalController,
+          horizontalPages: favouritesModel.favourites
+              .map(
+                (favourite) => FavouritePage(
+                  trackDetail: _tracks[favourite]!,
+                ),
+              )
+              .toList(),
+          verticalPages: verticalPages.toList(),
+          cornerPage: ChangeNotifierProvider(
+            create: (context) => UsernameModel(),
+            child: const EndPage(),
+          ),
+          placeholderHorizontalPage: Align(
+            alignment: Alignment.center,
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                child: Text(
+                  "Please add a favourite",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontSize: 28.0,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(0, 2),
+                        blurRadius: 25,
+                      )
+                    ],
                   ),
                 ),
               ),
-              ...verticalPages
-            ],
+            ),
           ),
         ),
       ),
@@ -390,12 +244,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-
-    // Re-show bars
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: SystemUiOverlay.values,
-    );
 
     super.dispose();
   }

@@ -19,7 +19,7 @@ class NavigatorDetails {
   });
 }
 
-class PageTemplate extends StatefulWidget {
+class PageTemplate extends StatelessWidget {
   final Widget body;
 
   final void Function()? onNavigateLeft;
@@ -36,16 +36,6 @@ class PageTemplate extends StatefulWidget {
     this.onNavigateDown,
   });
 
-  @override
-  State<PageTemplate> createState() => _PageTemplateState();
-}
-
-class _PageTemplateState extends State<PageTemplate> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Iterable<Widget> _generateNavigators(BuildContext context) {
     const buttonThickness = 90.0;
     Size horizontalSize =
@@ -55,25 +45,25 @@ class _PageTemplateState extends State<PageTemplate> {
 
     return [
       NavigatorDetails(
-        onNavigate: widget.onNavigateLeft,
+        onNavigate: onNavigateLeft,
         alignment: Alignment.centerLeft,
         icon: HeroIcons.arrowLeftCircle,
         direction: Axis.horizontal,
       ),
       NavigatorDetails(
-        onNavigate: widget.onNavigateRight,
+        onNavigate: onNavigateRight,
         alignment: Alignment.centerRight,
         icon: HeroIcons.arrowRightCircle,
         direction: Axis.horizontal,
       ),
       NavigatorDetails(
-        onNavigate: widget.onNavigateUp,
+        onNavigate: onNavigateUp,
         alignment: Alignment.topCenter,
         icon: HeroIcons.arrowUpCircle,
         direction: Axis.vertical,
       ),
       NavigatorDetails(
-        onNavigate: widget.onNavigateDown,
+        onNavigate: onNavigateDown,
         alignment: Alignment.bottomCenter,
         icon: HeroIcons.arrowDownCircle,
         direction: Axis.vertical,
@@ -143,7 +133,7 @@ class _PageTemplateState extends State<PageTemplate> {
           SafeArea(
             child: Stack(
               children: [
-                widget.body,
+                body,
                 ..._generateNavigators(context),
               ],
             ),

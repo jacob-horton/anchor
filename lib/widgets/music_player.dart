@@ -14,7 +14,7 @@ class TrackDetail {
   });
 }
 
-class MusicPlayer extends StatefulWidget {
+class MusicPlayer extends StatelessWidget {
   final double size;
   final TrackDetail trackDetail;
   final void Function(int numFavourites)? onFavouriteChanged;
@@ -26,11 +26,6 @@ class MusicPlayer extends StatefulWidget {
     this.onFavouriteChanged,
   });
 
-  @override
-  State<MusicPlayer> createState() => _MusicPlayerState();
-}
-
-class _MusicPlayerState extends State<MusicPlayer> {
   static final levelColours = [
     [
       const Color(0xff83E78D),
@@ -47,21 +42,21 @@ class _MusicPlayerState extends State<MusicPlayer> {
   ];
 
   bool _isPlaying(AudioPlayerModel player) {
-    return player.currentTrack == widget.trackDetail.name && player.isPlaying;
+    return player.currentTrack == trackDetail.name && player.isPlaying;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.size,
-      height: widget.size,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: levelColours[widget.trackDetail.level - 1],
+          colors: levelColours[trackDetail.level - 1],
         ),
-        borderRadius: BorderRadius.circular(widget.size / 5),
+        borderRadius: BorderRadius.circular(size / 5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -81,7 +76,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Text(
-                  AudioPlayerModel.formatFilename(widget.trackDetail.name),
+                  AudioPlayerModel.formatFilename(trackDetail.name),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     shadows: [
                       Shadow(
@@ -101,18 +96,16 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 Consumer<AudioPlayerModel>(
                   builder: (context, player, _) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => setState(() {
-                      player.switchOrPause(
-                        widget.trackDetail.name,
-                        widget.trackDetail.level,
-                      );
-                    }),
+                    onTap: () => player.switchOrPause(
+                      trackDetail.name,
+                      trackDetail.level,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: HeroIcon(
                         _isPlaying(player) ? HeroIcons.pause : HeroIcons.play,
                         color: Colors.white,
-                        size: widget.size / 4,
+                        size: size / 4,
                         style: HeroIconStyle.solid,
                       ),
                     ),
@@ -121,28 +114,28 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 Consumer<FavouritesModel>(
                   builder: (context, favourites, _) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => setState(() {
-                      if (favourites.isFavourite(widget.trackDetail.name)) {
-                        favourites.removeFavourite(widget.trackDetail.name);
+                    onTap: () {
+                      if (favourites.isFavourite(trackDetail.name)) {
+                        favourites.removeFavourite(trackDetail.name);
                       } else {
-                        favourites.addFavourite(widget.trackDetail.name);
+                        favourites.addFavourite(trackDetail.name);
                       }
 
-                      if (widget.onFavouriteChanged != null) {
-                        widget.onFavouriteChanged!(
+                      if (onFavouriteChanged != null) {
+                        onFavouriteChanged!(
                           favourites.favourites.length,
                         );
                       }
-                    }),
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: HeroIcon(
                         HeroIcons.star,
-                        style: favourites.isFavourite(widget.trackDetail.name)
+                        style: favourites.isFavourite(trackDetail.name)
                             ? HeroIconStyle.solid
                             : HeroIconStyle.outline,
                         color: Colors.white,
-                        size: widget.size / 4,
+                        size: size / 4,
                       ),
                     ),
                   ),

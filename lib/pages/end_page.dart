@@ -15,13 +15,9 @@ class EndPage extends StatefulWidget {
 
 class _EndPageState extends State<EndPage> {
   final TextEditingController _usernameController = TextEditingController();
+
   UsernameModel? _usernameModel;
   void Function()? _usernameListener;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

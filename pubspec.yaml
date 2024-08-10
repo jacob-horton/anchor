@@ -80,21 +80,21 @@ flutter:
     - images/level-2-album-art.png
     - images/level-3-album-art.png
 
-    - music/breeze.ogg
-    - music/change.ogg
-    - music/difference.ogg
-    - music/drifting.ogg
-    - music/float.ogg
-    - music/halls.ogg
-    - music/homes.ogg
-    - music/motions.ogg
-    - music/openings.ogg
-    - music/signs.mp3
-    - music/sleepy.ogg
-    - music/summer.ogg
-    - music/trains.ogg
-    - music/walks.ogg
-    - music/warm.mp3
+    - tracks/breeze.ogg
+    - tracks/change.ogg
+    - tracks/difference.ogg
+    - tracks/drifting.ogg
+    - tracks/float.ogg
+    - tracks/halls.ogg
+    - tracks/homes.ogg
+    - tracks/motions.ogg
+    - tracks/openings.ogg
+    - tracks/signs.mp3
+    - tracks/sleepy.ogg
+    - tracks/summer.ogg
+    - tracks/trains.ogg
+    - tracks/walks.ogg
+    - tracks/warm.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

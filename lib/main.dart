@@ -8,7 +8,7 @@ import 'package:anchor/models/username.dart';
 import 'package:anchor/pages/end_page.dart';
 import 'package:anchor/pages/favourite_page.dart';
 import 'package:anchor/pages/level_page.dart';
-import 'package:anchor/widgets/music_player.dart';
+import 'package:anchor/widgets/track_player.dart';
 import 'package:anchor/widgets/page_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

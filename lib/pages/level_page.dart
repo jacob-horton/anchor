@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:anchor/widgets/audio_progress_bar.dart';
-import 'package:anchor/widgets/music_player.dart';
+import 'package:anchor/widgets/track_player.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +51,7 @@ class LevelPage extends StatelessWidget {
                           .map(
                             (trackDetail) => Padding(
                               padding: const EdgeInsets.all(6.0),
-                              child: MusicPlayer(
+                              child: TrackPlayer(
                                 trackDetail: trackDetail,
                                 size: albumSize,
                                 onFavouriteChanged: onFavouriteChanged,

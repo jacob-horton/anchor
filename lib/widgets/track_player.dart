@@ -14,12 +14,12 @@ class TrackDetail {
   });
 }
 
-class MusicPlayer extends StatelessWidget {
+class TrackPlayer extends StatelessWidget {
   final double size;
   final TrackDetail trackDetail;
   final void Function(int numFavourites)? onFavouriteChanged;
 
-  const MusicPlayer({
+  const TrackPlayer({
     super.key,
     required this.size,
     required this.trackDetail,

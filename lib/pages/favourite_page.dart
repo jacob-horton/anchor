@@ -1,5 +1,5 @@
 import 'package:anchor/widgets/audio_progress_bar.dart';
-import 'package:anchor/widgets/music_player.dart';
+import 'package:anchor/widgets/track_player.dart';
 import 'package:flutter/material.dart';
 
 class FavouritePage extends StatelessWidget {
@@ -14,7 +14,7 @@ class FavouritePage extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: MusicPlayer(
+          child: TrackPlayer(
             trackDetail: trackDetail,
             size: albumSize,
           ),

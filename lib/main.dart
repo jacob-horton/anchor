@@ -188,10 +188,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     FocusScope.of(context).focusedChild?.unfocus();
   }
 
-  static const keyIsFirstLoad = 'is-first-load';
+  static const _keyIsFirstLoad = 'is-first-load';
   _showDialogIfFirstLoad(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstLoaded = prefs.getBool(keyIsFirstLoad) ?? true;
+    bool isFirstLoaded = prefs.getBool(_keyIsFirstLoad) ?? true;
 
     if (!context.mounted) {
       return;
@@ -206,16 +206,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               "Welcome",
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            content: Text(
-              "- Swipe between pages\n- Press star to add to your favourites for easy access\n- Change background in settings",
-              style: Theme.of(context).textTheme.bodySmall,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Hi, I hope you find the app useful. Anchor is an app that was designed to help neurodivergent people who are feeling anxious and/or nervous. The songs were made with the specific intention of being an 'anchor' for someone who is distressed. They feature repetitive melodies, rhythms and soft sounds to try and create a soothing and consistent environment. The app wont be for everyone, but I hope that it helps you in moments when things are overwhelming.",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontSize: 14.0),
+                ),
+                const SizedBox(height: 10.0),
+                Text(
+                  "Please swipe to the left and then swipe up to see the list of songs.",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.w700, fontSize: 14.0),
+                )
+              ],
             ),
             actions: <Widget>[
               TextButton(
                 child: const Text("Dismiss"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  prefs.setBool(keyIsFirstLoad, false);
+                  prefs.setBool(_keyIsFirstLoad, false);
                 },
               ),
             ],
@@ -314,8 +330,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleSmall!
-                                      .copyWith(
+                                      .titleSmall
+                                      ?.copyWith(
                                     fontSize: 28.0,
                                     shadows: [
                                       Shadow(

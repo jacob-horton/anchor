@@ -1,18 +1,9 @@
+import 'package:anchor/data/tracks.dart';
 import 'package:anchor/models/audio_player.dart';
 import 'package:anchor/models/favourites.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
-
-class TrackDetail {
-  final String name;
-  final int level;
-
-  const TrackDetail({
-    required this.name,
-    required this.level,
-  });
-}
 
 class TrackPlayer extends StatelessWidget {
   final double size;

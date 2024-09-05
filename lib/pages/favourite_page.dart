@@ -1,3 +1,4 @@
+import 'package:anchor/data/tracks.dart';
 import 'package:anchor/widgets/audio_progress_bar.dart';
 import 'package:anchor/widgets/track_player.dart';
 import 'package:flutter/material.dart';

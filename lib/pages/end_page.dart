@@ -39,88 +39,90 @@ class _EndPageState extends State<EndPage> {
         behavior: HitTestBehavior.opaque,
         child: hideForegroundModel.hideForeground
             ? Container()
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30, top: 30, bottom: 30),
-                          child: TextField(
-                            controller: _usernameController,
-                            onChanged: (text) =>
-                                _usernameModel!.username = text,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 25,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          final background = context.read<BackgroundModel>();
-                          final username = context.read<UsernameModel>();
+            : _renderForeground(context),
+      ),
+    );
+  }
 
-                          FocusScope.of(context).focusedChild?.unfocus();
-
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => MultiProvider(
-                                providers: [
-                                  ChangeNotifierProvider<BackgroundModel>.value(
-                                    value: background,
-                                  ),
-                                  ChangeNotifierProvider<UsernameModel>.value(
-                                    value: username,
-                                  ),
-                                ],
-                                child: SettingsPage(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                blurRadius: 15,
-                                spreadRadius: -20,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: HeroIcon(
-                              HeroIcons.cog6Tooth,
-                              style: HeroIconStyle.solid,
-                            ),
-                          ),
-                        ),
-                      ),
+  Widget _renderForeground(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  top: 30,
+                  bottom: 30,
+                ),
+                child: TextField(
+                  controller: _usernameController,
+                  onChanged: (text) => _usernameModel!.username = text,
+                  decoration: const InputDecoration(border: InputBorder.none),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(0, 2),
+                        blurRadius: 25,
+                      )
                     ],
                   ),
-                ],
+                ),
               ),
-      ),
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                final background = context.read<BackgroundModel>();
+                final username = context.read<UsernameModel>();
+
+                FocusScope.of(context).focusedChild?.unfocus();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider<BackgroundModel>.value(
+                          value: background,
+                        ),
+                        ChangeNotifierProvider<UsernameModel>.value(
+                          value: username,
+                        ),
+                      ],
+                      child: SettingsPage(),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 15,
+                      spreadRadius: -20,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: HeroIcon(
+                    HeroIcons.cog6Tooth,
+                    style: HeroIconStyle.solid,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

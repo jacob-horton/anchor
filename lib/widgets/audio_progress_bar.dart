@@ -26,7 +26,6 @@ class AudioProgressBar extends StatelessWidget {
                       return Container();
                     }
 
-                    // TODO: shadow
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

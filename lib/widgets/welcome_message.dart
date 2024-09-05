@@ -33,7 +33,7 @@ class WelcomeMessage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Hi, I hope you find the app useful. Anchor is an app that was designed to help neurodivergent people who are feeling anxious and/or nervous. The songs were made with the specific intention of being an 'anchor' for someone who is distressed. They feature repetitive melodies, rhythms and soft sounds to try and create a soothing and consistent environment. The app wont be for everyone, but I hope that it helps you in moments when things are overwhelming.",
+            "Hi, I hope you find the app useful. Anchor is an app that was designed to help neurodivergent people who are feeling anxious and/or nervous. The songs were made with the specific intention of being an 'anchor' for someone who is distressed. They feature repetitive melodies, rhythms and soft sounds to try and create a soothing and consistent environment. The app won't be for everyone, but I hope that it helps you in moments when things are overwhelming.",
             style:
                 Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14.0),
           ),

@@ -1,16 +1,11 @@
-# anchor
+# :anchor: Anchor
 
-A new Flutter project.
+Anchor is an app that was designed to help neurodivergent people who are feeling anxious and/or nervous. The songs were made with the specific intention of being an 'anchor' for someone who is distressed. They feature repetitive melodies, rhythms and soft sounds to try and create a soothing and consistent environment. The app won't be for everyone, but I hope that it helps you in moments when things are overwhelming.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## :sparkles: Features
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Simple + easy to navigate
+- Songs custom-made to be calming
+- Save your favourite songs
+- Change the app background

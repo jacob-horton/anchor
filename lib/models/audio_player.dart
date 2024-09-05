@@ -19,7 +19,7 @@ class AudioPlayerModel extends ChangeNotifier {
     if (_currentTrack != track) {
       await _player.setAudioSource(
         AudioSource.uri(
-          Uri.parse('asset:///tracks/$track'),
+          Uri.parse('asset:///assets/tracks/$track'),
           tag: MediaItem(
             id: track,
             title: formatFilename(track),

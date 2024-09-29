@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:anchor/models/favourites.dart';
 import 'package:anchor/models/hide_foreground.dart';
 import 'package:anchor/widgets/keep_alive.dart';
 import 'package:anchor/widgets/page_template.dart';
@@ -60,6 +61,18 @@ class _PageNavigatorState extends State<PageNavigator> {
   get navDown => () => widget.verticalController
       .nextPage(duration: _animationDuration, curve: _animationCurve);
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var faveProvider = Provider.of<FavouritesModel>(context, listen: false);
+      faveProvider.addListener(
+        () => _onPageChange(faveProvider.favourites.length),
+      );
+    });
+  }
+
   _Navigators getNavigators(PageType pageType, bool hideForeground) {
     if (hideForeground && pageType == PageType.corner) {
       return _Navigators();
@@ -83,7 +96,7 @@ class _PageNavigatorState extends State<PageNavigator> {
 
   PageType _pageType = PageType.leftMostHortizontal;
 
-  void _onPageChange() {
+  void _onPageChange(int numHorizontal) {
     // Set navigation buttons
     PageType newPageType;
 
@@ -96,7 +109,7 @@ class _PageNavigatorState extends State<PageNavigator> {
       } else {
         newPageType = PageType.bottomMostVertical;
       }
-    } else if (horizPage < max(1, widget.horizontalPages.length)) {
+    } else if (horizPage < max(1, numHorizontal)) {
       // We are scrolling horizontally
       if (horizPage > 0) {
         newPageType = PageType.hortizontal;
@@ -133,7 +146,7 @@ class _PageNavigatorState extends State<PageNavigator> {
         scrollDirection: Axis.vertical,
         physics: _verticalScrollPhysics,
         controller: widget.verticalController,
-        onPageChanged: (_) => _onPageChange(),
+        onPageChanged: (_) => _onPageChange(widget.horizontalPages.length),
         children: [
           KeepAlivePage(
             child: PageView.builder(
@@ -153,7 +166,7 @@ class _PageNavigatorState extends State<PageNavigator> {
                 }
 
                 // Update arrows
-                _onPageChange();
+                _onPageChange(widget.horizontalPages.length);
               },
               controller: widget.horizontalController,
               itemBuilder: (context, i) {
@@ -163,7 +176,7 @@ class _PageNavigatorState extends State<PageNavigator> {
                     onTap: () {
                       widget.horizontalController.jumpToPage(1);
                       widget.verticalController.jumpToPage(1);
-                      _onPageChange();
+                      _onPageChange(widget.horizontalPages.length);
                     },
                     child: widget.placeholderHorizontalPage,
                   );

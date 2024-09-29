@@ -41,8 +41,9 @@ class SettingsPage extends StatelessWidget {
 
   Widget _renderButtons(BuildContext context) {
     const spacing = 10.0;
-    BackgroundModel background = Provider.of<BackgroundModel>(context);
-    UsernameModel username = Provider.of<UsernameModel>(context);
+    BackgroundModel background =
+        Provider.of<BackgroundModel>(context, listen: false);
+    UsernameModel username = Provider.of<UsernameModel>(context, listen: false);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -23,7 +23,7 @@ class _EndPageState extends State<EndPage> {
   Widget build(BuildContext context) {
     if (_usernameModel == null) {
       // Setup listener to update controller when username changes
-      _usernameModel = Provider.of<UsernameModel>(context);
+      _usernameModel = Provider.of<UsernameModel>(context, listen: false);
       _usernameController.text = _usernameModel!.username;
 
       _usernameListener = () {

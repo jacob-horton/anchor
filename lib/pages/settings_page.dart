@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
   late final SharedPreferences prefs;
@@ -34,6 +35,18 @@ class SettingsPage extends StatelessWidget {
         children: [
           _renderTitleBar(context),
           Expanded(child: Center(child: _renderButtons(context))),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(20.0),
+              child: InkWell(
+                onTap: () => launchUrl(Uri.parse(
+                  'https://github.com/jacob-horton/anchor/blob/main/privacy-policy.md',
+                )),
+                child: const Text('Privacy policy',
+                    style: TextStyle(fontSize: 12.0)),
+              ),
+            ),
+          ),
         ],
       ),
     );

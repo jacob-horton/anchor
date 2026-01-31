@@ -48,3 +48,14 @@ The calming approach extends to the user interface. We believe an anxiety app sh
 - **Sensory friendly** - no bright or harsh colors, the UI uses a muted palette
 - **Minimalist** - reduced clutter to make navigation effortless when you are feeling overwhelmed
 - **Predictable** - we avoid unnecessary design overhauls. The interface is built to stay familiar and consistent, so you always know exactly where everything is
+
+### 📸 Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/1b7c2dc1-9c99-40bd-9571-572b26845abc" width="250" alt="screenshot 1" /></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/f7b2e7c8-8be4-47b7-848b-73273bc4494b" width="250" alt="screenshot 2" /></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/306e52d9-8071-433d-bf25-6d91fcaabedb" width="250" alt="screenshot 3" /></td>
+  </tr>
+</table>
+
